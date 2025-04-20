@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1014350600711",
+    "project_id": "antique-75a0c",
+    "storage_bucket": "antique-75a0c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1014350600711:android:4474bc51b862c00893e8a2",
+        "android_client_info": {
+          "package_name": "com.example.antique"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAAzt0VR92fi4muRfq811Ny0Q8GKlUS-5k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
