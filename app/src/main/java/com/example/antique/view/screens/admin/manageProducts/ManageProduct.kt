@@ -28,7 +28,6 @@ import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.antique.model.remote.utils.CloudinaryManager
 import com.example.antique.view.components.AdminBottomBar
-import com.example.antique.view.components.DropDownMenu
 import com.example.antique.view.components.TopBar
 import com.example.antique.view.navigation.Screen
 import com.example.antique.viewmodel.HomeViewModel
@@ -36,8 +35,10 @@ import com.example.antique.viewmodel.ProductViewModel
 import com.example.antique.viewmodel.admin.ManageProductVM
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
+import androidx.compose.ui.graphics.Color
 import com.example.antique.model.remote.entity.Category
-import java.util.Locale
+import androidx.compose.ui.Alignment
 
 
 @SuppressLint("ContextCastToActivity")
@@ -89,11 +90,8 @@ fun ManageProduct(
         }
     }
 
-
-
-
     fun validateInputs(): Boolean {
-        if (actionType == "Add") if (viewModel.cid.isBlank() || viewModel.cid == "-1") {
+        if (actionType == "Thêm") if (viewModel.cid.isBlank() || viewModel.cid == "-1") {
             Toast.makeText(context, "Dữ liệu không hợp lệ", Toast.LENGTH_SHORT).show()
             return true
         }
@@ -103,7 +101,6 @@ fun ManageProduct(
             Toast.makeText(context, "Các dữ liệu không hợp lệ", Toast.LENGTH_SHORT).show()
             return true
         }
-
         return false
     }
 
@@ -113,10 +110,11 @@ fun ManageProduct(
         keyboardController?.hide()
         focusManager.clearFocus()
     },
-        topBar = { TopBar("$actionType Sản phẩm", { navController.popBackStack(); }) },
+        topBar = { TopBar("$actionType sản phẩm", { navController.popBackStack(); }) },
         content = { padding ->
             Column(
                 Modifier
+                    .background(Color(0xFFF8EBCB))
                     .padding(padding)
                     .padding(20.dp)
                     .fillMaxSize(),
@@ -129,19 +127,20 @@ fun ManageProduct(
                 ) {
 
                     if (viewModel.imageUrl.isNotBlank()) {
-                        Spacer(modifier = Modifier.height(10.dp))
-                        Text(
-                            text = "Ảnh sản phẩm",
-                            style = MaterialTheme.typography.titleMedium
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Image(
-                            painter = rememberAsyncImagePainter(viewModel.imageUrl),
-                            contentDescription = "Ảnh sản phẩm",
+                        Column(
                             modifier = Modifier
-                                .size(200.dp)
-                                .clickable { imagePickerLauncher.launch("image/*") }
-                        )
+                                .fillMaxWidth(),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Spacer(modifier = Modifier.height(10.dp))
+                            Image(
+                                painter = rememberAsyncImagePainter(viewModel.imageUrl),
+                                contentDescription = "Ảnh sản phẩm",
+                                modifier = Modifier
+                                    .size(230.dp)
+                                    .clickable { imagePickerLauncher.launch("image/*") }
+                            )
+                        }
                     }
 
                     OutlinedTextField(
@@ -151,12 +150,21 @@ fun ManageProduct(
                         value = viewModel.imageUrl,
                         onValueChange = { viewModel.imageUrl = it },
                         label = { Text("URL") },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+                        colors = OutlinedTextFieldDefaults.colors(
+                                focusedBorderColor = Color(0xFF6D4C41),
+                                unfocusedBorderColor = Color(0xFF6D4C41),
+                                cursorColor = Color(0xFF8B5E3C)
+                    )
                     )
 
                     Button(
                         onClick = { imagePickerLauncher.launch("image/*") },
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(0xFF8B5E3C),
+                            contentColor = Color.White
+                        )
                     ) {
                         Text("Chọn ảnh từ thiết bị")
                     }
@@ -171,7 +179,12 @@ fun ManageProduct(
                         },
                         label = { Text("Tên sản phẩm") },
                         singleLine = true,
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = Color(0xFF6D4C41),
+                            unfocusedBorderColor = Color(0xFF6D4C41),
+                            cursorColor = Color(0xFF8B5E3C)
+                        )
                     )
 
                     OutlinedTextField(
@@ -183,6 +196,11 @@ fun ManageProduct(
                         singleLine = true,
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         modifier = Modifier.fillMaxWidth(),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = Color(0xFF6D4C41),
+                            unfocusedBorderColor = Color(0xFF6D4C41),
+                            cursorColor = Color(0xFF8B5E3C)
+                        )
                     )
 
                     OutlinedTextField(
@@ -194,6 +212,11 @@ fun ManageProduct(
                         label = { Text("Mô tả") },
                         placeholder = { },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = Color(0xFF6D4C41),
+                            unfocusedBorderColor = Color(0xFF6D4C41),
+                            cursorColor = Color(0xFF8B5E3C)
+                        )
                     )
 
                     OutlinedTextField(
@@ -202,22 +225,34 @@ fun ManageProduct(
                         onValueChange = { viewModel.stock = it },
                         label = { Text("Số lượng") },
                         singleLine = true,
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = Color(0xFF6D4C41),
+                            unfocusedBorderColor = Color(0xFF6D4C41),
+                            cursorColor = Color(0xFF8B5E3C)
+                        )
                     )
 
                     Button(
                         onClick = {
 
                             if (!validateInputs()) {
-                                if (actionType == "Edit") viewModel.updateProduct()
+                                if (actionType == "Chỉnh sửa") viewModel.updateProduct()
                                 else viewModel.addProduct()
 
                                 productVM.getProducts()
                                 navController.navigate(Screen.AdminProductList.route)
                             }
-                        }, Modifier.align(End)
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 12.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(0xFF8C6A3F),
+                            contentColor = Color.White
+                        )
                     ) {
-                        if (actionType == "Add") {
+                        if (actionType == "Thêm") {
                             btnText = "Thêm"
                         }
                         Text(text = btnText)
@@ -232,7 +267,7 @@ fun ManageProduct(
 fun CategoryDropDown(list: List<Category>, cid: String) {
     var expanded by remember { mutableStateOf(false) }
     val selectedIndex = list.indexOfFirst { it.cid == cid.toIntOrNull() }
-    val initialCategoryName = if (selectedIndex != -1) list[selectedIndex].name else "Not Selected"
+    val initialCategoryName = if (selectedIndex != -1) list[selectedIndex].name else "Chưa chọn"
     var selectedText by remember { mutableStateOf(initialCategoryName) }
 
     val context = LocalContext.current
@@ -242,7 +277,7 @@ fun CategoryDropDown(list: List<Category>, cid: String) {
         OutlinedTextField(
             value = selectedText,
             onValueChange = { },
-            label = { Text("Category") },
+            label = { Text("Danh mục") },
             modifier = Modifier.fillMaxWidth(),
             readOnly = true,
             trailingIcon = {

@@ -38,7 +38,8 @@ fun CartItemCard(
             .fillMaxWidth()
             .padding(top = 10.dp, bottom = 10.dp),
         elevation = CardDefaults.elevatedCardElevation(5.dp),
-        shape = RoundedCornerShape(20.dp)
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFA3B18A))
     ) {
         Row(
             Modifier
@@ -48,11 +49,15 @@ fun CartItemCard(
         ) {
             FilledIconButton(
                 onClick = { openRemoveCartItemDialog.value = true },
-                modifier = Modifier.size(16.dp)
+                modifier = Modifier.size(16.dp),
+                colors = IconButtonDefaults.filledIconButtonColors(
+                    containerColor = Color(0xFF6D4C41),
+                    contentColor = Color.White
+                )
             ) {
                 Icon(
                     imageVector = Icons.Filled.Close,
-                    contentDescription = "Remove item button."
+                    contentDescription = "Nút"
                 )
             }
         }
@@ -67,7 +72,7 @@ fun CartItemCard(
             ) {
                 Image(
                     painter = rememberAsyncImagePainter(model = cartItem.product.image),
-                    contentDescription = "Cart Item Image",
+                    contentDescription = "Ảnh sản phẩm",
                     Modifier
                         .size(80.dp)
                         .padding(5.dp)
@@ -83,6 +88,7 @@ fun CartItemCard(
                     text = cartItem.product.title,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
+                    color = Color(0xFF4B1E1E),
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -92,7 +98,12 @@ fun CartItemCard(
                         .padding(top = 5.dp),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text(text = "$${cartItem.product.price}")
+                    Text(
+                        text = "$${cartItem.product.price}",
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = Color(0xFF4B1E1E)
+                    )
 
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -108,6 +119,10 @@ fun CartItemCard(
 
                             },
                             modifier = Modifier.size(19.dp),
+                            colors = IconButtonDefaults.filledIconButtonColors(
+                                containerColor = Color(0xFF6D4C41),
+                                contentColor = Color.White
+                            )
                         ) {
                             Icon(
                                 imageVector = Icons.Filled.Remove,
@@ -115,13 +130,22 @@ fun CartItemCard(
                             )
                         }
 
-                        Text(text = "${cartItem.cart.quantity}")
+                        Text(
+                            text = "${cartItem.cart.quantity}",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 16.sp,
+                            color = Color(0xFF4B1E1E)
+                        )
 
                         FilledIconButton(
                             onClick = {
                                 viewModel.updateQty(cartItem, 1)
                             },
-                            modifier = Modifier.size(19.dp)
+                            modifier = Modifier.size(19.dp),
+                            colors = IconButtonDefaults.filledIconButtonColors(
+                                containerColor = Color(0xFF6D4C41),
+                                contentColor = Color.White
+                            )
                         ) {
                             Icon(
                                 imageVector = Icons.Filled.Add,
@@ -138,27 +162,49 @@ fun CartItemCard(
         AlertDialog(
             onDismissRequest = { openRemoveCartItemDialog.value = false },
             title = {
-                Text(text = "Xóa sản phẩm")
+                Text(
+                    "Xóa sản phẩm",
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF4B1E1E)
+                )
             },
             text = {
-                Text("Bạn có muốn xóa sản phẩm này khỏi giỏ hàng không?")
+                Text(
+                    "Bạn có muốn xóa sản phẩm này khỏi giỏ hàng không?",
+                    color = Color(0xFF4B1E1E)
+                )
             },
             confirmButton = {
-                Button(
-                    onClick = {
-                        openRemoveCartItemDialog.value = false
-                        viewModel.deleteCartItem(cartItem.cart)
-                    }
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
                 ) {
-                    Text("Có")
-                }
-            },
-            dismissButton = {
-                Button(
-                    onClick = {
-                        openRemoveCartItemDialog.value = false
-                    }) {
-                    Text("Hủy")
+                    Button(
+                        onClick = {
+                            openRemoveCartItemDialog.value = false
+                            viewModel.deleteCartItem(cartItem.cart)
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(0xFF6D4C41),
+                            contentColor = Color(0xFFF8EBCB)
+                        ),
+                        modifier = Modifier.padding(horizontal = 8.dp)
+                    ) {
+                        Text("Có")
+                    }
+
+                    Button(
+                        onClick = {
+                            openRemoveCartItemDialog.value = false
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(0xFF8D6E63),
+                            contentColor = Color.White
+                        ),
+                        modifier = Modifier.padding(horizontal = 8.dp)
+                    ) {
+                        Text("Hủy")
+                    }
                 }
             }
         )

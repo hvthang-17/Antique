@@ -6,22 +6,19 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ListAlt
-import androidx.compose.material.icons.filled.Payments
-import androidx.compose.material.icons.filled.Store
-import androidx.compose.material3.Divider
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.example.antique.model.remote.entity.Category
+import com.example.antique.model.remote.entity.Coupon
 import com.example.antique.model.remote.entity.Order
 import com.example.antique.model.remote.entity.Product
 import com.example.antique.view.components.AdminBottomBar
@@ -36,22 +33,35 @@ import kotlin.math.round
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AdminDashboardInit(navController: NavHostController) {
-    val adminDashboardVM = viewModel<DashboardVM>(LocalContext.current as ComponentActivity)
-    val orderVM = viewModel<OrderViewModel>(LocalContext.current as ComponentActivity)
-
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    val adminDashboardVM = viewModel<DashboardVM>(context as ComponentActivity)
+    val orderVM = viewModel<OrderViewModel>(context)
 
     val allOrders = orderVM.getAllOrders()
     val totalOrders = allOrders.size
-
-
     val totalSales = adminDashboardVM.getTotalSales()
     val allProducts = remember { adminDashboardVM.getAllProducts() }
+    val allCategories = remember { adminDashboardVM.getAllCategories() }
+    val allCoupons = remember { adminDashboardVM.getAllCoupons() }
+
+    adminDashboardVM.coupons
+    adminDashboardVM.categories
     adminDashboardVM.products
     adminDashboardVM.allOrders = allOrders.toMutableList()
     val latestOrders = adminDashboardVM.getLatestOrders()
-    val latestOrdersSubList = if(latestOrders.size < 10) latestOrders else latestOrders.subList(allOrders.size - 10, allOrders.size - 1)
+    val latestOrdersSubList = if (latestOrders.size < 10)
+        latestOrders else latestOrders.subList(latestOrders.size - 10, latestOrders.size)
 
-    Dashboard(navController, latestOrdersSubList, totalOrders, totalSales, allProducts)
+    Dashboard(
+        navController,
+        latestOrdersSubList,
+        totalOrders,
+        totalSales,
+        allProducts,
+        allCategories,
+        allCoupons
+    )
 }
 
 @ExperimentalMaterial3Api
@@ -61,71 +71,90 @@ fun Dashboard(
     orderData: List<Order>,
     totalOrders: Int,
     totalSales: Double,
-    products: List<Product>
+    products: List<Product>,
+    categories: List<Category>,
+    coupons: List<Coupon>,
 ) {
-    Scaffold(topBar = { TopBar("Dashboard") }, content = { padding ->
-        Column(
-            modifier = Modifier.padding(padding),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-
-            Row(
-                Modifier
-                    .fillMaxWidth()
-                    .height(150.dp),
-                horizontalArrangement = Arrangement.SpaceEvenly,
-                verticalAlignment = Alignment.CenterVertically
+    Scaffold(
+        containerColor = Color(0xFFF8EBCB),
+        topBar = { TopBar("Trang tổng quan") },
+        bottomBar = { AdminBottomBar(navController = navController) },
+        content = { padding ->
+            Column(
+                modifier = Modifier.padding(padding),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                StatsCard(Icons.Filled.ListAlt, "Tổng đơn hàng", "$totalOrders") {
-                    navController.navigate(
-                        "detailsPage/orders/total orders"
-                    )
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .height(150.dp),
+                    horizontalArrangement = Arrangement.SpaceEvenly,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    StatsCard(Icons.Filled.ListAlt, "Tổng đơn hàng", "$totalOrders") {
+                        navController.navigate("detailsPage/orders/Tổng đơn hàng")
+                    }
+                    StatsCard(Icons.Filled.Payments, "Tổng doanh thu", "$${round(totalSales)}") {
+                        navController.navigate("detailsPage/sales/Tổng doanh thu")
+                    }
+                    StatsCard(Icons.Filled.Store, "Tổng sản phẩm", "${products.size}") {
+                        navController.navigate(Screen.AdminProductList.route)
+                    }
                 }
-                StatsCard(Icons.Filled.Payments, "Tổng danh thu", "$${round(totalSales)}") {
-                    navController.navigate(
-                        "detailsPage/sales/Total sales"
-                    )
+
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .height(150.dp),
+                    horizontalArrangement = Arrangement.SpaceEvenly,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    StatsCard(Icons.Default.Category, "Tổng danh mục", "${categories.size}") {
+                        navController.navigate(Screen.AdminCategoryList.route)
+                    }
+                    StatsCard(Icons.Filled.Discount, "Mã giảm giá", "${coupons.size}") {
+                        navController.navigate(Screen.AdminCouponList.route)
+                    }
+                    StatsCard(Icons.Filled.Discount, "Biểu đồ", "${coupons.size}") {
+                        navController.navigate(Screen.AdminCouponList.route)
+                    }
                 }
-                StatsCard(Icons.Filled.Store, "Tổng sản phẩm", "${products.size}") {
-                    navController.navigate(
-                        Screen.AdminProductList.route
-                    )
+
+                Divider(color = Color(0xFF6D4C41), thickness = 1.dp)
+
+                Text(
+                    text = "Các đơn hàng gần đây",
+                    modifier = Modifier
+                        .padding(5.dp)
+                        .fillMaxWidth()
+                        .offset(x = 12.dp),
+                    textAlign = TextAlign.Left,
+                    style = largeTitle,
+                    color = Color(0xFF4B1E1E)
+                )
+
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .height(50.dp),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    SegmentedButton()
                 }
-            }
-            Divider()
 
-            Text(
-                text = "Các đơn hàng gần đây",
-                modifier = Modifier
-                    .padding(5.dp)
-                    .fillMaxWidth()
-                    .offset(x = 12.dp),
-                textAlign = TextAlign.Left,
-                style = largeTitle
-            )
+                Divider(color = Color(0xFF6D4C41), thickness = 1.dp)
 
-            Row(
-                Modifier
-                    .fillMaxWidth()
-                    .height(50.dp),
-                horizontalArrangement = Arrangement.Center
-            ) {
-
-                SegmentedButton()
-            }
-            Divider()
-
-            LazyColumn(
-                contentPadding = PaddingValues(all = 10.dp)
-            ) {
-                items(items = orderData) { order ->
-                    LatestOrderCard(navController, order = order)
+                LazyColumn(
+                    contentPadding = PaddingValues(all = 10.dp)
+                ) {
+                    items(items = orderData) { order ->
+                        LatestOrderCard(navController, order = order)
+                    }
                 }
             }
         }
-    },
-
-        bottomBar = { AdminBottomBar(navController = navController) } //navController = navController
     )
 }
+
+

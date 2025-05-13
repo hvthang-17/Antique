@@ -57,24 +57,25 @@ fun ProductListCard(
     Card(
         modifier = Modifier
             .requiredHeightIn(115.dp, 160.dp)
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .padding(bottom = 5.dp),
         onClick = {
             if (isAdmin) {
                 if (homeVM.actionType == "see all" || homeVM.actionType == "search" || homeVM.actionType == "category") {
                     navController.navigate("product/${product.id}")
                 } else {
                     manageProductVM.setCurrentProduct(product)
-                    navController.navigate("manageProduct/Edit")
+                    navController.navigate("manageProduct/Chỉnh sửa")
                 }
             } else navController.navigate("product/${product.id}")
         },
-        //colors = CardDefaults.cardColors(Color.Gray),
+        colors = CardDefaults.cardColors(Color.Gray),
         elevation = CardDefaults.cardElevation(10.dp)
     ) {
         Row(
             modifier = Modifier
                 .fillMaxSize()
-//                .background(Color.White)
+                .background(Color(0xFFD9C789))
                 .padding(5.dp),
             horizontalArrangement = Arrangement.SpaceAround,
 
@@ -96,7 +97,7 @@ fun ProductListCard(
                     contentDescription = product.title,
                     contentScale = ContentScale.Fit,
                     modifier = Modifier
-                        .background(Color.White)
+                        .background(Color(0xFFD9C789))
                         .fillMaxHeight(1f)
                         .width(120.dp),
                 )
@@ -107,23 +108,24 @@ fun ProductListCard(
                 Text(
                     text = product.title,
                     modifier = Modifier
-                       // .background(Color.White)
+                        .background(Color(0xFFD9C789))
                         .height(25.dp)
                         .fillMaxWidth(),
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
+                    color = Color(0xFF4B1E1E),
                     textAlign = TextAlign.Left
                 )
                 Spacer(modifier = Modifier.height(5.dp))
                 Text(
                     text = product.description,
                     modifier = Modifier
-                        //.background(Color.White)
+                        .background(Color(0xFFD9C789))
                         .requiredHeight(50.dp)
                         .fillMaxWidth(),
                     overflow = TextOverflow.Ellipsis,
                     fontSize = 12.sp,
-                    //color = Color.Gray,
+                    color = Color(0xFF4B1E1E),
                     lineHeight = 15.sp,
                     textAlign = TextAlign.Left,
                     softWrap = true
@@ -142,7 +144,7 @@ fun ProductListCard(
                     Text(
                         text = rating.toString(),
                         modifier = Modifier
-                            //.background(Color.White)
+                            .background(Color(0xFFD9C789))
                             .height(20.dp)
                             .fillMaxWidth()
                             .weight(2F),
@@ -158,7 +160,7 @@ fun ProductListCard(
                     .height(150.dp)
                     .fillMaxWidth()
                     .align(Alignment.Start),
-                    //colors = ButtonDefaults.buttonColors(Color(240, 244, 239)),
+                    colors = ButtonDefaults.buttonColors(Color(240, 244, 239)),
                     onClick = {
                         productVM.addToCart(currentUserId, product.id)
                         addedToast.show()
@@ -171,7 +173,7 @@ fun ProductListCard(
                             .weight(2F),
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
-                        //color = Color.Black
+                        color = Color.Black
                     )
                     Spacer(modifier = Modifier.width(10.dp))
                     Icon(

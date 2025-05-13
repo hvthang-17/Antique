@@ -3,6 +3,7 @@ package com.example.antique.view.screens
 import android.annotation.SuppressLint
 import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -17,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -45,6 +47,10 @@ fun Register(
         .fillMaxWidth()
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
+    val antiqueBackground = Color(0xFFD9C789)
+    val brownText = Color(0xFF4B1E1E)
+    val borderColor = Color(0xFF8C6A3F)
+    val buttonColor = Color(0xFF8C6A3F)
 
     Scaffold(
         // Modifier for click action anywhere on the screen - Hide keyboard and reset focus
@@ -59,63 +65,81 @@ fun Register(
         Column(
             modifier = Modifier
                 .padding(padding)
+                .fillMaxSize()
+                .background(antiqueBackground)
                 .padding(20.dp)
         ) {
             val context = LocalContext.current
 
-            Text("Create Account", fontWeight = FontWeight.Bold, fontSize = 40.sp)
-            Text("Join us and start shopping now!", fontSize = 15.sp)
+            Text(
+                "Tạo tài khoản",
+                fontWeight = FontWeight.Bold,
+                fontSize = 36.sp,
+                color = brownText
+            )
 
-            OutlinedTextField(modifier = inputFieldModifier,
+            Text(
+                "Tham gia cùng chúng tôi và bắt đầu mua sắm ngay!",
+                fontSize = 15.sp,
+                color = brownText
+            )
+
+            OutlinedTextField(
+                modifier = inputFieldModifier,
                 value = viewModel.firstName,
                 onValueChange = {
                     if (viewModel.fNameError) viewModel.fNameError = false
                     viewModel.firstName = it
                 },
-                label = { Text("First Name") },
+                label = { Text("Họ", color = brownText) },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
                 keyboardActions = KeyboardActions(onDone = {
                     focusManager.moveFocus(FocusDirection.Down)
                 }),
-                isError = viewModel.fNameError)
+                isError = viewModel.fNameError,
+            )
 
-            OutlinedTextField(value = viewModel.lastName,
+            OutlinedTextField(
                 modifier = inputFieldModifier,
+                value = viewModel.lastName,
                 onValueChange = {
                     if (viewModel.lNameError) viewModel.lNameError = false
                     viewModel.lastName = it
                 },
-                label = { Text("Last Name") },
+                label = { Text("Tên", color = brownText) },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
                 keyboardActions = KeyboardActions(onDone = {
                     focusManager.moveFocus(FocusDirection.Down)
                 }),
-                isError = viewModel.lNameError)
+                isError = viewModel.lNameError,
+            )
 
-            OutlinedTextField(value = viewModel.email,
+            OutlinedTextField(
                 modifier = inputFieldModifier,
+                value = viewModel.email,
                 onValueChange = {
                     if (viewModel.emailError) viewModel.emailError = false
                     viewModel.email = it
                 },
-                label = { Text("Email") },
+                label = { Text("Email", color = brownText) },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                 keyboardActions = KeyboardActions(onDone = {
                     focusManager.moveFocus(FocusDirection.Down)
                 }),
-                isError = viewModel.emailError)
+                isError = viewModel.emailError,
+            )
 
-
-            OutlinedTextField(value = viewModel.password,
+            OutlinedTextField(
                 modifier = inputFieldModifier,
+                value = viewModel.password,
                 onValueChange = {
                     if (viewModel.passwordError) viewModel.passwordError = false
                     viewModel.password = it
                 },
-                label = { Text("Password") },
+                label = { Text("Mật khẩu", color = brownText) },
                 singleLine = true,
                 visualTransformation = if (viewModel.passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
@@ -125,87 +149,103 @@ fun Register(
                     val image =
                         if (viewModel.passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
                     val description =
-                        if (viewModel.passwordVisible) "Hide password" else "Show password"
+                        if (viewModel.passwordVisible) "Ẩn mật khẩu" else "Hiện mật khẩu"
                     IconButton(onClick = {
                         viewModel.passwordVisible = !viewModel.passwordVisible
                     }) {
-                        Icon(imageVector = image, description)
+                        Icon(
+                            imageVector = image,
+                            contentDescription = description,
+                            tint = brownText
+                        )
                     }
-                })
+                },
+            )
 
-            //Date Picker
-            val calendar = Calendar.getInstance()
-            calendar.add(Calendar.YEAR, -18)
-
+            // Date Picker
+            val calendar = Calendar.getInstance().apply { add(Calendar.YEAR, -18) }
             val dateDialog = DatePickerDialog(
                 viewModel.birthDate, context, calendar, calendar.timeInMillis
             )
 
-            OutlinedTextField(value = viewModel.birthDate.value,
-                modifier = inputFieldModifier.clickable(indication = null,
+            OutlinedTextField(
+                value = viewModel.birthDate.value,
+                modifier = inputFieldModifier.clickable(
+                    indication = null,
                     interactionSource = remember { MutableInteractionSource() }) {
                     focusManager.clearFocus()
                     dateDialog.show()
                 },
                 onValueChange = {},
-                label = { Text("Birthdate") },
+                label = { Text("Ngày sinh", color = brownText) },
                 singleLine = true,
                 enabled = false,
-                isError = viewModel.dobError
+                isError = viewModel.dobError,
             )
 
+            // Checkbox + Button
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 20.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-
-                TermsCheck(viewModel.termsIsChecked)
+                TermsCheck(viewModel.termsIsChecked, brownText)
 
                 val openDialog = remember { mutableStateOf(false) }
-                Button(modifier = Modifier.padding(top = 20.dp),
+
+                Button(
+                    modifier = Modifier
+                        .padding(top = 20.dp)
+                        .fillMaxWidth()
+                        .height(50.dp),
                     enabled = viewModel.termsIsChecked.value,
                     onClick = {
                         if (!viewModel.validateRegisterInput()) {
-                            Toast.makeText(context, "Invalid input!", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, "Thông tin không hợp lệ!", Toast.LENGTH_SHORT)
+                                .show()
                         } else if (!viewModel.validateExistingAccount()) {
-                            Toast.makeText(context, "Account already exists!", Toast.LENGTH_SHORT)
+                            Toast.makeText(context, "Tài khoản đã tồn tại!", Toast.LENGTH_SHORT)
                                 .show()
                         } else {
                             viewModel.addUser()
                             openDialog.value = true
                         }
-                    }) {
-                    Text("REGISTER", fontSize = 20.sp)
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = buttonColor)
+                ) {
+                    Text("ĐĂNG KÝ", color = Color.White, fontSize = 18.sp)
                 }
 
                 SuccessDialog(
-                    openDialog, "Account created", "Enjoy shopping with us!", "Login"
-                ) { navToLogin() }
+                    openDialog,
+                    "Tạo tài khoản thành công",
+                    "Chúc bạn mua sắm vui vẻ!",
+                    "Đăng nhập"
+                ) {
+                    navToLogin()
+                }
             }
         }
     }
 }
 
 @Composable
-fun TermsCheck(termsIsChecked: MutableState<Boolean>) {
-    Row(verticalAlignment = Alignment.Top) {
+fun TermsCheck(termsIsChecked: MutableState<Boolean>, color: Color) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
         Checkbox(
             checked = termsIsChecked.value,
             onCheckedChange = { termsIsChecked.value = it },
-
-            modifier = Modifier
-                .padding(5.dp)
-                .size(3.dp),
+            colors = CheckboxDefaults.colors(checkedColor = color, uncheckedColor = color)
         )
-        Spacer(modifier = Modifier.padding(5.dp))
-        Text("I Agree to the Terms of Service and Privacy Policy.",
-            Modifier.clickable(indication = null,
-                interactionSource = remember { MutableInteractionSource() }) {
+        Spacer(modifier = Modifier.width(6.dp))
+        Text(
+            "Tôi đồng ý với Điều khoản dịch vụ & Chính sách bảo mật.",
+            fontSize = 12.sp,
+            color = color,
+            modifier = Modifier.clickable {
                 termsIsChecked.value = !termsIsChecked.value
-            },
-            fontSize = 12.sp
+            }
         )
     }
 }

@@ -28,7 +28,7 @@ fun SegmentedButton() {
                 if (adminDashboardVM.selectedSortChip != 1) adminDashboardVM.selectedSortChip =
                     1 else adminDashboardVM.selectedSortChip = 0
             },
-            label = { Text("Trạng thái A-Z") },
+            label = { Text("Trạng thái") },
             leadingIcon = if (adminDashboardVM.selectedSortChip == 1) {
                 {
                     Icon(

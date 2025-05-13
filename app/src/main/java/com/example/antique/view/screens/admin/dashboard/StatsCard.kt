@@ -5,6 +5,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import com.example.antique.view.theme.mediumTitle
@@ -18,7 +19,11 @@ fun StatsCard(icon: ImageVector, title: String, info: String, onClick: ()-> Unit
             .size(100.dp)
             .fillMaxHeight(0.6F),
         elevation = CardDefaults.cardElevation(8.dp),
-        onClick = onClick
+        onClick = onClick,
+        colors = CardDefaults.cardColors(
+            containerColor = Color(0xFFA3B18A),
+            contentColor = Color(0xFF3C2F2F)
+        )
     ) {
         Column(
             modifier = Modifier
@@ -36,7 +41,6 @@ fun StatsCard(icon: ImageVector, title: String, info: String, onClick: ()-> Unit
 
             Text(text = info, modifier= Modifier.weight(1.5f), style = mediumTitle)
             Text(text = title, modifier= Modifier.weight(1.5f).wrapContentSize(Alignment.Center, true), style = smallTitle)
-
         }
     }
 }

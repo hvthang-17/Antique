@@ -24,5 +24,4 @@ fun Int.toAdaptiveDp(): Dp { //dpValue: Int
     val adjustedDp = dpValueOf160 * dpDiff
 
     return adjustedDp.roundToInt().dp
-
 }

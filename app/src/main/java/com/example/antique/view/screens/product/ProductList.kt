@@ -3,6 +3,7 @@ package com.example.antique.view.screens.product
 import android.annotation.SuppressLint
 import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -15,6 +16,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -65,7 +67,7 @@ fun ProductList(
             }
             "Admin" -> {
                 homeViewModel.actionType = ""
-                navRoute.value = "manageProduct/Add"
+                navRoute.value = "manageProduct/Thêm"
                 products = productFlowList
             }
         }
@@ -96,6 +98,7 @@ fun ProductList(
     }, content = { padding ->
         Column(
             modifier = Modifier
+                .background(Color(0xFFF8EBCB))
                 .padding(padding)
                 .fillMaxSize(),
             verticalArrangement = Arrangement.Top,
@@ -115,7 +118,7 @@ fun ProductList(
                 ) {
                     Text("Không tìm thấy!", fontSize = 20.sp, fontWeight = FontWeight.Bold)
                     Button(onClick = { navController.navigate(navRoute) }) { //go home.
-                        Text("Try again")
+                        Text("Thử lại")
                     }
                 }
 

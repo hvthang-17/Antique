@@ -5,14 +5,14 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Address(
     var id: String = "",
-    val uid: String = "",   //ID người dùng
-    val name: String,   //TenKH
-    val street: String = "",   //TenDuong
-    val ward: String = "",   // Phường/Xã
-    val district: String = "",   // Quận/Huyện
-    val city: String = "",     // Tỉnh/Thành phố
+    val uid: String = "",
+    val name: String,
+    val street: String = "",
+    val ward: String = "",
+    val district: String = "",
+    val city: String = "",
     val phone: String,
-    val poBox: Int,   //Mã bưu điện
+    val poBox: Int,
 ) {
     constructor() : this(
         id = "",

@@ -18,7 +18,6 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-
 class ReportVM(val context: Application) : AndroidViewModel(context) {
     private val orderRepository = OrderRepository
 
@@ -31,9 +30,9 @@ class ReportVM(val context: Application) : AndroidViewModel(context) {
     @RequiresApi(Build.VERSION_CODES.O)
     private val currentDateFormatted: String = currentDate.format(formatter)
 
-    val radioOptions = listOf("All", "Processing", "Shipped", "Delivered")
+    val radioOptions = listOf("Tất cả", "Đang xử lý", "Đang giao", "Đã giao")
     val finalOrderStatusValue = mutableStateOf(radioOptions[0])
-    val tempOrderStatusValue = mutableStateOf("All")
+    val tempOrderStatusValue = mutableStateOf("Tất cả")
     val startDate = mutableStateOf("N/A")
     @RequiresApi(Build.VERSION_CODES.O)
     val endDate = mutableStateOf(currentDateFormatted)
@@ -49,7 +48,7 @@ class ReportVM(val context: Application) : AndroidViewModel(context) {
         var result = emptyList<Order>()
         runBlocking {
             this.launch(Dispatchers.IO) {
-                result = if (finalOrderStatusValue.value == "All") orderRepository.getAllOrders()
+                result = if (finalOrderStatusValue.value == "Tất cả") orderRepository.getAllOrders()
                 else orderRepository.getFilteredOrders(finalOrderStatusValue.value)
             }
         }
@@ -92,16 +91,16 @@ class ReportVM(val context: Application) : AndroidViewModel(context) {
             totalProductsByStatus.add(deliveredProductInfo)
         }
 
-        when (order.status.lowercase()) {
-            "processing" -> {
+        when (order.status) {
+            "Đang xử lý" -> {
                 totalProductsByStatus[0].count += order.items.size
                 totalProductsByStatus[0].amount += order.total
             }
-            "shipped" -> {
+            "Đang giao" -> {
                 totalProductsByStatus[1].count += order.items.size
                 totalProductsByStatus[1].amount += order.total
             }
-            "delivered" -> {
+            "Đã giao" -> {
                 totalProductsByStatus[2].count += order.items.size
                 totalProductsByStatus[2].amount += order.total
             }

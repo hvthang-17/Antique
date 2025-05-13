@@ -52,6 +52,7 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.firebase.firestore.ktx)
+    implementation(libs.androidx.media3.common.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -85,5 +86,15 @@ dependencies {
     implementation ("androidx.compose.material:material:1.5.4")
 
     implementation("com.cloudinary:cloudinary-android:2.0.0")
+
+    implementation ("androidx.compose.ui:ui:<compose_version>")
+    implementation ("androidx.compose.foundation:foundation:<compose_version>")
+
+//    implementation ("androidx.compose.material:material:1.6.8")
+//    implementation ("androidx.compose.material3:material3:1.2.1")
+//    implementation ("androidx.activity:activity-compose:1.9.2")
+//    implementation ("com.google.firebase:firebase-auth:22.3.1")
+//    implementation ("com.google.firebase:firebase-firestore:24.10.3")
+
 
 }

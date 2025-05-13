@@ -41,13 +41,11 @@ class FilterViewModel(val context: Application) : AndroidViewModel(context) {
         return false
     }
 
-
     fun setPriceEnd(range: ClosedFloatingPointRange<Float>) {
         onFinishedPriceRange = range
         setStartPrice(range.toRange().lower)
         setEndPrice(range.toRange().upper)
     }
-
 
     fun setPriceRange(range: ClosedFloatingPointRange<Float>) {
         priceSliderRange = range
@@ -82,7 +80,6 @@ class FilterViewModel(val context: Application) : AndroidViewModel(context) {
     fun getReviewSliderValue(): Float {
         return reviewSlider
     }
-
 
     fun getCategoryProducts(
     ): List<Product>? {

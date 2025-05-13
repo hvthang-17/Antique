@@ -40,18 +40,15 @@ object CartRepository {
     }
 
     suspend fun insertCart(cart: Cart) {
-        //Check if item already in user cart
         val userCart = getCartByUser(cart.uid)
         for (item in userCart) {
             if (item.pid == cart.pid) {
-                // Update quantity if item already in cart
                 item.quantity += 1
                 cartCollectionRef.document(item.id).set(item)
                 return
             }
         }
 
-        // If not already in cart, add new document
         val documentId = cartCollectionRef.document().id
         cart.id = documentId
         cartCollectionRef.document(documentId).set(cart)

@@ -7,7 +7,10 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.sp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -17,27 +20,33 @@ fun TopBar(
     actions: @Composable RowScope.() -> Unit = {}
 ) {
     TopAppBar(
-        colors = TopAppBarDefaults.mediumTopAppBarColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
+        modifier = Modifier.fillMaxWidth(),
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = Color(0xFF8C6A3F),
+            titleContentColor = Color(0xFFF8EBCB),
+            navigationIconContentColor = Color(0xFFFBE7C6),
+            actionIconContentColor = Color(0xFFFBE7C6)
+        ),
         title = {
             Text(
-                title,
+                text = title,
                 maxLines = 1,
-                overflow = TextOverflow.Ellipsis
+                overflow = TextOverflow.Ellipsis,
+                fontSize = 20.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = Color(0xFFF8EBCB)
             )
         },
-
         navigationIcon = {
             navBack?.let {
-                IconButton(onClick = { navBack() }) {
+                IconButton(onClick = it) {
                     Icon(
                         imageVector = Icons.Filled.ArrowBack,
-                        contentDescription = "Go to previous screen."
+                        contentDescription = "Quay lại màn hình trước"
                     )
                 }
             }
         },
-        actions = actions,
-        modifier = Modifier
-            .fillMaxWidth(1f)
+        actions = actions
     )
 }

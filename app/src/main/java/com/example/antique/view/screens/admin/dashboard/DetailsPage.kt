@@ -177,7 +177,7 @@ fun DetailsPage(
                             )
                             Text(text = reportVM.totalQuantity.toString(), style = mediumTitle)
                             Spacer(modifier = Modifier.height(12.dp))
-                            Text(text = "Tổng tiềnn:", style = mediumCaption)
+                            Text(text = "Tổng tiền:", style = mediumCaption)
                             Text(text = "$" + round(reportVM.totalSales), style = mediumTitle)
                         }
 
@@ -186,4 +186,4 @@ fun DetailsPage(
 
             }
         })
-}
+    }

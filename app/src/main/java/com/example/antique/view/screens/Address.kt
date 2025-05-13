@@ -14,6 +14,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -41,7 +42,9 @@ fun Address(
 ) {
     addressViewModel.setUser(appViewModel.getCurrentUserId())
 
-    Scaffold(topBar = { TopBar("$screenMode Địa chỉ", { navController.popBackStack() }) },
+    Scaffold(
+        containerColor = Color(0xFFF8EBCB),
+        topBar = { TopBar("$screenMode địa chỉ", { navController.popBackStack() }) },
         content = { padding ->
             Column(
                 Modifier
@@ -70,9 +73,15 @@ fun Address(
                         .fillMaxWidth()
                         .weight(1f), horizontalArrangement = Arrangement.Center
                 ) {
-                    Button(onClick = {
-                        navController.navigate("${Screen.ManageAddress.route}/$screenMode/-1")
-                    }) {
+                    Button(
+                        onClick = {
+                            navController.navigate("${Screen.ManageAddress.route}/$screenMode/-1")
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(0xFF6D4C41),
+                            contentColor = Color(0xFFF8EBCB)
+                        )
+                    ) {
                         Text("Thêm địa chỉ")
                     }
                 }
@@ -96,7 +105,7 @@ fun AddressCard(
 ) {
     Card(
         onClick = {
-            if (mode == "Select") {
+            if (mode == "Chọn") {
                 setSelectedAddress()
                 navController.navigate(route = Screen.Payment.route)
             }
@@ -105,7 +114,8 @@ fun AddressCard(
             .fillMaxWidth()
             .padding(top = 10.dp, bottom = 10.dp),
         elevation = CardDefaults.elevatedCardElevation(5.dp),
-        shape = RoundedCornerShape(20.dp)
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFDAD7CD))
     ) {
 
         Row(Modifier.padding(8.dp)) {
@@ -118,13 +128,13 @@ fun AddressCard(
             )
 
             Column(Modifier.padding(5.dp)) {
-                Text(text = address.name, style = MaterialTheme.typography.titleMedium)
-                Text("SĐT: ${address.phone}")
-                Text("Tên đường: ${address.street}")
-                Text("Phường/Xã: ${address.ward}")
-                Text("Quận/Huyện ${address.district}")
-                Text("Tỉnh/Thành phố: ${address.city}")
-                Text("Mã bưu điện: ${address.poBox}")
+                Text(text = address.name, style = MaterialTheme.typography.titleMedium, color = Color(0xFF4B1E1E))
+                Text("SĐT: ${address.phone}", color = Color(0xFF4B1E1E))
+                Text("Tên đường: ${address.street}", color = Color(0xFF4B1E1E))
+                Text("Phường/Xã: ${address.ward}", color = Color(0xFF4B1E1E))
+                Text("Quận/Huyện: ${address.district}", color = Color(0xFF4B1E1E))
+                Text("Tỉnh/Thành phố: ${address.city}", color = Color(0xFF4B1E1E))
+                Text("Mã bưu điện: ${address.poBox}", color = Color(0xFF4B1E1E))
             }
 
             Row(

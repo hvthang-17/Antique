@@ -4,9 +4,11 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -23,7 +25,9 @@ fun LatestOrderCard(navController: NavController, order: Order) {
             .height(92.dp)
             .fillMaxWidth(),
         onClick = { navController.navigate("orderDetails/${order.id}") },
-        //colors = CardDefaults.cardColors(MaterialTheme.colorScheme.surfaceTint),
+        colors = CardDefaults.cardColors(
+            containerColor = Color(0xFFE0DEDE)
+        ),
         elevation = CardDefaults.cardElevation(10.dp)
     ) {
 

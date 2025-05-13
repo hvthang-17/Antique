@@ -19,9 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.antique.R
@@ -47,7 +45,9 @@ fun TrackOrders(
 
     val orders = orderViewModel.orders
 
-    Scaffold(topBar = {
+    Scaffold(
+        containerColor = Color(0xFFF8EBCB),
+        topBar = {
         TopBar(title = "Theo dõi đơn hàng", { navController.popBackStack() })
     }, content = { padding ->
         LazyColumn(
@@ -79,7 +79,8 @@ fun OrderCard(order: Order, navController: NavHostController) {
             .padding(top = 10.dp, bottom = 15.dp)
             .height(175.dp),
         elevation = CardDefaults.elevatedCardElevation(5.dp),
-        shape = RoundedCornerShape(10.dp)
+        shape = RoundedCornerShape(10.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFDAD7CD))
     ) {
         Column(
             Modifier
@@ -89,34 +90,31 @@ fun OrderCard(order: Order, navController: NavHostController) {
             Row() {
                 Column(
                     verticalArrangement = Arrangement.spacedBy(5.dp),
+                    modifier = Modifier.fillMaxWidth()
                 ) {
                     Row(
                         Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(
-                            text = "ID", style = largeTitle
-                        )
-                        Text(
-                            text = order.id, style = largeTitle
-                        )
+                        Text("ID", style = largeTitle, color = Color(0xFF6D4C41))
+                        Text(order.id, style = largeTitle, color = Color(0xFF4B1E1E))
                     }
-                    Divider(color = Color.Black)
+                    Divider(color = Color(0xFF6D4C41))
                     Spacer(modifier = Modifier.height(2.dp))
                     Row(
                         Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
                     ) {
                         Text(
-                            text = order.date, style = largeTitle
+                            text = order.date, style = largeTitle,  color = Color(0xFF4B1E1E)
                         )
                     }
                     Row(
                         Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text(text = "Trạng thái:  ${order.status}", style = mediumCaption)
-                        Text(text = "Tổng cộng: $${order.total}", style = mediumCaption)
+                        Text("Trạng thái:  ${order.status}", style = mediumCaption, color = Color(0xFF6D4C41))
+                        Text("Tổng cộng: $${order.total}", style = mediumCaption, color = Color(0xFF6D4C41))
                     }
                 }
             }
@@ -131,9 +129,10 @@ fun OrderCard(order: Order, navController: NavHostController) {
 @Composable
 fun StepBar(doneStatus: String) {
     val stepIsComplete: Int = when (doneStatus) {
-        "Processing" -> 1
-        "Shipped" -> 2
-        else -> 3
+        "Đang xử lý" -> 1
+        "Đang giao" -> 2
+        "Đã giao" -> 3
+        else -> 1 // fallback nếu lỡ sai
     }
 
     Row(modifier = Modifier.fillMaxWidth(1f), horizontalArrangement = Arrangement.SpaceBetween) {
@@ -154,18 +153,26 @@ fun Step(status: String, stepNumber: Int, state: Int) {
         painterResource(id = R.drawable.pending_circle2)
     }
 
-    val icon: ImageVector = when (status.lowercase()) {
-        "processing" -> StatusIcons.PROCESSING
-        "shipped" -> StatusIcons.SHIPPED
-        else -> StatusIcons.DELIVERED
+    val icon: ImageVector = when (status) {
+        "Đang xử lý" -> StatusIcons.PROCESSING
+        "Đang giao" -> StatusIcons.SHIPPED
+        "Đã giao" -> StatusIcons.DELIVERED
+        else -> StatusIcons.PROCESSING
     }
 
-    Column {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(4.dp),
+        modifier = Modifier.padding(horizontal = 8.dp)
+    ) {
         Icon(
-            painter = statusIcon, contentDescription = null, tint = innerCircleColor
+            painter = statusIcon,
+            contentDescription = null,
+            tint = innerCircleColor
         )
         Icon(
-            imageVector = icon, contentDescription = null
+            imageVector = icon,
+            contentDescription = null
         )
     }
 

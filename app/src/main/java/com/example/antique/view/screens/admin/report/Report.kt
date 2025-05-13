@@ -13,6 +13,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -48,13 +49,13 @@ fun AdminReportsInit(navController: NavHostController) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Text(text = "No orders within this range. Cannot generate report.")
+            Text(text = "Không có đơn hàng trong phạm vi này!")
             TextButton(onClick = {
                 reportVM.isFiltered =
                     false; navController.navigate(Screen.AdminReport.route); reportVM.finalOrderStatusValue.value =
-                "All"
+                "Tất cả"
             }, colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary)) {
-                Text(text = "Generate default report", style = mediumTitle)
+                Text(text = "Tạo báo cáo mặc định", style = mediumTitle)
             }
             if (!reportVM.isFiltered) {
                 orders = remember { orderVM.getAllOrders() }
@@ -62,26 +63,25 @@ fun AdminReportsInit(navController: NavHostController) {
                     reportVM.getProductCountByStatus(order)
                 }
             }
-
         }
 
     } else {
 
-        if (reportVM.isFiltered) { // not empty
+        if (reportVM.isFiltered) {
             orders = reportVM.filteredOrders
             for (order in reportVM.filteredOrders) {
                 reportVM.getProductCountByStatus(order)
             }
             when (reportVM.finalOrderStatusValue.value.lowercase()) {
-                "processing" -> {
+                "Đang xử lý" -> {
                     reportVM.totalProductsCount.value = reportVM.totalProductsByStatus[0].count
                     reportVM.totalSales = reportVM.totalProductsByStatus[0].amount
                 }
-                "shipped" -> {
+                "Đang giao" -> {
                     reportVM.totalProductsCount.value = reportVM.totalProductsByStatus[1].count
                     reportVM.totalSales = reportVM.totalProductsByStatus[1].amount
                 }
-                "delivered" -> {
+                "Đã giao" -> {
                     reportVM.totalProductsCount.value = reportVM.totalProductsByStatus[2].count
                     reportVM.totalSales = reportVM.totalProductsByStatus[2].amount
                 }
@@ -106,7 +106,7 @@ fun AdminReports(
 ) {
     Scaffold(
         topBar = {
-            TopBar("Reports", actions = {
+            TopBar("Báo cáo", actions = {
                 IconButton(onClick = {
                     navController.navigate(Screen.FilterReport.route)
                 }) {
@@ -117,6 +117,7 @@ fun AdminReports(
                 }
             })
         },
+        containerColor = Color(0xFFEAD9B5),
         content = { padding ->
             Column(
                 Modifier
@@ -128,86 +129,97 @@ fun AdminReports(
 
                 Text(
 
-                    text = "${reportVM.totalProductsCount.value} Products",
+                    text = "${reportVM.totalProductsCount.value} sản phẩm",
                     softWrap = true,
                     overflow = TextOverflow.Clip,
-                    style = header
+                    style = header,
+                    color = Color(0xFF4B1E1E)
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Row() {
                     Text(
-                        text = "Start date: ${reportVM.startDate.value}",
-                        softWrap = true,
+                        text = "Ngày bắt đầu: ${reportVM.startDate.value}",
+                                softWrap = true,
                         overflow = TextOverflow.Clip,
-                        style = smallTitle
+                        style = smallTitle,
+                        color = Color(0xFF6D4C41)
                     )
                     Spacer(modifier = Modifier.width(10.dp))
                     Text(
-                        text = "End date: ${reportVM.endDate.value}",
+                        text = "Ngày kết thúc: ${reportVM.endDate.value}",
                         softWrap = true,
                         overflow = TextOverflow.Clip,
-                        style = smallTitle
+                        style = smallTitle,
+                        color = Color(0xFF6D4C41)
                     )
                 }
                 Spacer(modifier = Modifier.height(8.dp))
                 Row() {
                     Text(
-                        text = "Total amount $${round(reportVM.totalSales)}",
+                        text = "Tổng giá trị $${round(reportVM.totalSales)}",
                         softWrap = true,
                         overflow = TextOverflow.Clip,
-                        style = smallTitle
+                        style = smallTitle,
+                        color = Color(0xFF4B1E1E)
                     )
                     Spacer(modifier = Modifier.width(10.dp))
                     Text(
-                        text = "Status: ${reportVM.finalOrderStatusValue.value}",
+                        text = "Trạng thái: ${reportVM.finalOrderStatusValue.value}",
                         softWrap = true,
                         overflow = TextOverflow.Clip,
-                        style = smallTitle
+                        style = smallTitle,
+                        color = Color(0xFF4B1E1E)
                     )
                 }
                 if (!isCollapsed) {
 
                     Spacer(modifier = Modifier.height(12.dp))
 
-                    Text(text = "Processing", style = mediumTitle)
+                    Text(text = "Đang xử lí", style = mediumTitle, color = Color(0xFF4B1E1E))
                     Row(
                         Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
-                            text = "${reportVM.totalProductsByStatus[0].count} products",
-                            style = smallTitle
+                            text = "${reportVM.totalProductsByStatus[0].count} sản phẩm",
+                            style = smallTitle,
+                            color = Color(0xFF6D4C41)
                         )
                         Text(
-                            text = "Amount $${round(reportVM.totalProductsByStatus[0].amount)}",
-                            style = smallTitle
+                            text = "Tổng tiền $${round(reportVM.totalProductsByStatus[0].amount)}",
+                            style = smallTitle,
+                            color = Color(0xFF6D4C41)
                         )
                     }
                     Spacer(modifier = Modifier.height(12.dp))
-                    Text(text = "Shipped", style = mediumTitle)
+                    Text(text = "Đã giao", style = mediumTitle, color = Color(0xFF4B1E1E))
                     Row(
                         Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
-                            text = "${reportVM.totalProductsByStatus[1].count} products",
-                            style = smallTitle
+                            text = "${reportVM.totalProductsByStatus[1].count} sản phẩm",
+                            style = smallTitle,
+                            color = Color(0xFF6D4C41)
                         )
                         Text(
-                            text = "Amount $${round(reportVM.totalProductsByStatus[1].amount)}",
-                            style = smallTitle
+                            text = "Tổng tiền $${round(reportVM.totalProductsByStatus[1].amount)}",
+                            style = smallTitle,
+                            color = Color(0xFF6D4C41)
                         )
                     }
                     Spacer(modifier = Modifier.height(12.dp))
-                    Text(text = "Delivered", style = mediumTitle)
+                    Text(text = "Đã nhận", style = mediumTitle, color = Color(0xFF4B1E1E))
                     Row(
                         Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
-                            text = "${reportVM.totalProductsByStatus[2].count} products",
-                            style = smallTitle
+                            text = "${reportVM.totalProductsByStatus[2].count} sản phẩm",
+                            style = smallTitle,
+                            color = Color(0xFF6D4C41)
                         )
                         Text(
-                            text = "Amount $${round(reportVM.totalProductsByStatus[2].amount)}",
-                            style = smallTitle
+                            text = "Tổng tiền $${round(reportVM.totalProductsByStatus[2].amount)}",
+                            style = smallTitle,
+                            color = Color(0xFF6D4C41)
                         )
                     }
 
@@ -218,10 +230,10 @@ fun AdminReports(
                 if (reportVM.finalOrderStatusValue.value.lowercase() == "all") TextButton(onClick = {
                     isCollapsed = !isCollapsed
                 }) {
-                    Text(text = if (!isCollapsed) "Collapse" else "Click for more details.")
+                    Text(text = if (!isCollapsed) "Thu gọn" else "Xem chi tiết")
                 }
 
-                Divider()
+                Divider(color = Color(0xFF6D4C41), thickness = 1.dp)
                 Spacer(modifier = Modifier.height(8.dp))
 
                 LazyColumn(
@@ -232,7 +244,7 @@ fun AdminReports(
                         Spacer(modifier = Modifier.height(5.dp))
                     }
                 }
-                Divider()
+                Divider(color = Color(0xFF6D4C41), thickness = 1.dp)
             }
         },
         bottomBar = { AdminBottomBar(navController = navController) } //navController = navController

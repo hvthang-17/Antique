@@ -3,6 +3,7 @@ package com.example.antique.view.screens.product
 import android.annotation.SuppressLint
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -59,17 +60,18 @@ fun ProductDetails(
     Scaffold(topBar = { TopBar(navBack = { navController.popBackStack() }) }, content = { padding ->
         Column(
             Modifier
+                .background(Color(0xFFF8EBCB))
                 .padding(padding)
                 .padding(20.dp)
                 .fillMaxHeight()
         ) {
             var titleFontSize = 25.sp
             if (product.value.title.length > 55) titleFontSize = 22.sp
-            Text(product.value.title, fontWeight = FontWeight.Bold, fontSize = titleFontSize)
+            Text(product.value.title, fontWeight = FontWeight.Bold, fontSize = titleFontSize, color = Color(0xFF4B1E1E))
 
             if (reviewCount != 0) {
                 Row(Modifier.padding(bottom = 10.dp)) {
-                    Text("⭐$avgRating", fontWeight = FontWeight.Bold)
+                    Text("⭐$avgRating", fontWeight = FontWeight.Bold, color = Color(0xFF6D4C41))
                     Text(" ($reviewCount ${if (reviewCount == 1) "Đánh giá" else "Các đánh giá"})")
                 }
             }
@@ -78,16 +80,32 @@ fun ProductDetails(
                 Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 item() {
-                    Image(
-                        painter = rememberAsyncImagePainter(model = product.value.image),
-                        contentDescription = "Product image",
-                        Modifier.size(300.dp)
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 10.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Image(
+                            painter = rememberAsyncImagePainter(model = product.value.image),
+                            contentDescription = "Product image",
+                            modifier = Modifier
+                                .size(360.dp)
+                                .clip(RoundedCornerShape(20.dp))
+                        )
+                    }
+                }
+
+                item {
+                    Text(
+                        product.value.description,
+                        color = Color(0xFF4B1E1E),
+                        lineHeight = 20.sp,
+                        fontSize = 15.sp
                     )
                 }
 
-                item() { Text(product.value.description) }
-
-                item() { Divider() }
+                item { Divider(thickness = 1.dp, color = Color(0xFF8B5E3C)) }
 
                 item() {
                     Row(
@@ -95,7 +113,7 @@ fun ProductDetails(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text("Các đánh giá", fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                        Text("Các đánh giá", fontWeight = FontWeight.Bold, fontSize = 18.sp, color = Color(0xFF4B1E1E))
                         if (userBought) {
                             IconButton(onClick = {
                                 navController.navigate("manageReview/${productId}")
@@ -104,7 +122,7 @@ fun ProductDetails(
                                     Icon(
                                         imageVector = Icons.Outlined.Add,
                                         contentDescription = "Thêm đánh giá",
-                                        tint = Color.Blue
+                                        tint = Color(0xFF8B5E3C)
                                     )
                                 }
                             }
@@ -122,42 +140,72 @@ fun ProductDetails(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("$${product.value.price}", fontWeight = FontWeight.Bold, fontSize = 25.sp)
+                Text("$${product.value.price}", fontWeight = FontWeight.Bold, fontSize = 25.sp,  color = Color(0xFF8B5E3C))
 
-                Button(
-                    onClick = {
-                        viewModel.addToCart(currentUserId, productId)
-                        openDialog.value = true
-                    }, Modifier.padding(top = 10.dp), enabled = product.value.stock != 0
-                ) {
-                    Text("THÊM VÀO GIỎ", fontSize = 15.sp, fontWeight = FontWeight.Bold)
+                if (product.value.stock > 0) {
+                    Button(
+                        onClick = {
+                            viewModel.addToCart(currentUserId, productId)
+                            openDialog.value = true
+                        },
+                        modifier = Modifier
+                            .padding(top = 10.dp)
+                            .height(48.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(0xFF8B5E3C),
+                            contentColor = Color.White
+                        )
+                    ) {
+                        Text("Thêm vào giỏ hàng", fontSize = 15.sp, fontWeight = FontWeight.Bold)
+                    }
+                } else {
+                    Text(
+                        text = "Hết hàng",
+                        color = Color.Red,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier
+                            .padding(top = 10.dp)
+                    )
                 }
             }
 
             if (openDialog.value) {
-                AlertDialog(onDismissRequest = { openDialog.value = false },
-                    title = { Text("Đã thêm vào giỏ hàng") },
+                AlertDialog(
+                    containerColor = Color(0xFFF8EBCB),
+                    onDismissRequest = { openDialog.value = false },
+                    title = { Text("Đã thêm vào giỏ hàng", color = Color(0xFF4B1E1E)) },
                     text = {
                         Column() {
                             Text(
-                                "Sản phẩm đã được thêm vào giỏ hàng thành công.", Modifier.padding(top = 10.dp)
+                                "Sản phẩm đã được thêm vào giỏ hàng thành công.",
+                                Modifier.padding(top = 10.dp),
+                                color = Color(0xFF4B1E1E)
                             )
                         }
                     },
                     confirmButton = {
-                        Button(modifier = Modifier.fillMaxWidth(), onClick = {
-                            openDialog.value = false
-                            navController.navigate(Screen.Cart.route)
-                        }) {
-                            Text("Đến giỏ hàng")
+                        Button(
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF8B5E3C)),
+                            onClick = {
+                                openDialog.value = false
+                                navController.navigate(Screen.Cart.route)
+                            }
+                        ) {
+                            Text("Đến giỏ hàng", color = Color.White)
                         }
                     },
                     dismissButton = {
-                        Button(modifier = Modifier.fillMaxWidth(), onClick = {
-                            openDialog.value = false
-                            navController.navigate(Screen.Home.route)
-                        }) {
-                            Text("Tiếp tục mua")
+                        Button(
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF6D4C41)),
+                            onClick = {
+                                openDialog.value = false
+                                navController.navigate(Screen.Home.route)
+                            }
+                        ) {
+                            Text("Tiếp tục mua", color = Color.White)
                         }
                     })
             }

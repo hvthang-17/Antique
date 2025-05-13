@@ -59,7 +59,9 @@ fun ManageReview(
     val focusManager = LocalFocusManager.current
     val context = LocalContext.current
 
-    Scaffold(modifier = Modifier
+    Scaffold(
+        containerColor = Color(0xFFF8EBCB),
+        modifier = Modifier
         .fillMaxSize()
         .clickable(
             interactionSource = remember { MutableInteractionSource() }, indication = null
@@ -69,16 +71,16 @@ fun ManageReview(
         }, topBar = {
 
         var type = ""
-        reviewViewModel.returnReview()?.let { type = "Edit" } ?: run { type = "Add" }
+        reviewViewModel.returnReview()?.let { type = "Sửa" } ?: run { type = "Thêm" }
         TopBar(type, { navController.popBackStack() }, actions = {
-            if (type == "Edit") {
+            if (type == "Sửa") {
                 IconButton(onClick = {
                     reviewViewModel.openDialog = true
                 }) {
                     Row(Modifier.fillMaxWidth(0.5f)) {
                         Icon(
                             imageVector = Icons.Outlined.Delete,
-                            contentDescription = "Delete Review",
+                            contentDescription = "Xóa đánh giá",
                             tint = Color.Red
                         )
                     }
@@ -97,7 +99,7 @@ fun ManageReview(
                 Row(modifier = Modifier.height(intrinsicSize = IntrinsicSize.Min)) {
                     Image(
                         painter = rememberAsyncImagePainter(model = it.image),
-                        contentDescription = "placeholder image",
+                        contentDescription = "Ảnh sản phẩm",
                         Modifier.size(150.dp)
                     )
 
@@ -111,7 +113,8 @@ fun ManageReview(
                             maxLines = 2,
                             overflow = TextOverflow.Ellipsis,
                             modifier = Modifier.fillMaxWidth(),
-                            fontSize = 20.sp
+                            fontSize = 20.sp,
+                            color = Color(0xFF4B1E1E)
                         )
                         RatingBar(reviewViewModel)
                     }
@@ -119,7 +122,7 @@ fun ManageReview(
             }
 
             Column() {
-                Text(text = "Review Title", fontSize = 14.sp)
+                Text(text = "Tiêu đề", fontSize = 14.sp, color = Color(0xFF6D4C41))
                 OutlinedTextField(
                     modifier = inputFieldModifier,
                     value = reviewViewModel.reviewTitle,
@@ -127,15 +130,20 @@ fun ManageReview(
                         if (reviewViewModel.titleError) reviewViewModel.titleError = false
                         reviewViewModel.reviewTitle = it
                     },
-                    placeholder = { Text("Heading") },
+                    placeholder = { Text("Nhập tiêu đề", color = Color(0xFF6D4C41)) },
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-                    isError = reviewViewModel.titleError
+                    isError = reviewViewModel.titleError,
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = Color(0xFF6D4C41),
+                        unfocusedBorderColor = Color(0xFF6D4C41),
+                        cursorColor = Color(0xFF6D4C41)
+                    )
                 )
             }
 
             Column() {
-                Text(text = "Description", fontSize = 14.sp)
+                Text(text = "Nội dung", fontSize = 14.sp, color = Color(0xFF6D4C41))
                 OutlinedTextField(
                     modifier = inputFieldModifier.fillMaxHeight(0.5f),
                     value = reviewViewModel.reviewDescription,
@@ -144,41 +152,52 @@ fun ManageReview(
                             false
                         reviewViewModel.reviewDescription = it
                     },
-                    placeholder = { Text("Details") },
+                    placeholder = { Text("Chi tiết đánh giá", color = Color(0xFF6D4C41)) },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-                    isError = reviewViewModel.descriptionError
+                    isError = reviewViewModel.descriptionError,
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = Color(0xFF6D4C41),
+                        unfocusedBorderColor = Color(0xFF6D4C41),
+                        cursorColor = Color(0xFF6D4C41)
+                    )
                 )
             }
 
-            Button(modifier = Modifier
-                .align(Alignment.End)
-                .padding(top = 50.dp), onClick = {}) {
-                Text(text = "Submit", fontSize = 20.sp, modifier = Modifier.clickable {
-                    val allowSubmit: Boolean = reviewViewModel.validateReviewInput()
-                    reviewViewModel.returnReview()?.let {
+            Button(
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(top = 50.dp),
+                onClick = {
+                    val allowSubmit = reviewViewModel.validateReviewInput()
+                    if (reviewViewModel.returnReview() != null) {
                         if (allowSubmit) {
                             reviewViewModel.updateReview()
-                            Toast.makeText(context, "Review Updated", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, "Đã cập nhật đánh giá", Toast.LENGTH_SHORT).show()
                             navController.popBackStack()
                         }
-                    } ?: run {
-
+                    } else {
                         if (allowSubmit) {
                             reviewViewModel.addReview()
-                            Toast.makeText(context, "Review Added", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, "Đã thêm đánh giá", Toast.LENGTH_SHORT).show()
                             navController.popBackStack()
                         }
                     }
-                })
+                },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFF6D4C41),
+                    contentColor = Color(0xFFF8EBCB)
+                )
+            ) {
+                Text(text = "Gửi", fontSize = 18.sp)
             }
 
             if (reviewViewModel.openDialog) {
                 AlertDialog(onDismissRequest = { reviewViewModel.openDialog = false },
-                    title = { Text("Are you sure you want to delete?") },
+                    title = { Text("Xác nhận xóa đánh giá") },
                     text = {
                         Column() {
                             Text(
-                                "This will delete your review of the product.",
+                                "Bạn có chắc chắn muốn xóa đánh giá sản phẩm này?",
                                 Modifier.padding(top = 10.dp)
                             )
                         }
@@ -187,10 +206,10 @@ fun ManageReview(
                         Button(modifier = Modifier.fillMaxWidth(), onClick = {
                             reviewViewModel.openDialog = false
                             reviewViewModel.deleteReview()
-                            Toast.makeText(context, "Review Deleted", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, "Đã xóa đánh giá", Toast.LENGTH_SHORT).show()
                             navController.popBackStack()
                         }) {
-                            Text("Confirm")
+                            Text("Xác nhận")
                         }
                     },
                     dismissButton = {
@@ -198,7 +217,7 @@ fun ManageReview(
                             reviewViewModel.openDialog = false
 
                         }) {
-                            Text("Cancel")
+                            Text("Hủy")
                         }
                     })
             }
@@ -209,7 +228,7 @@ fun ManageReview(
 @Composable
 fun RatingBar(reviewViewModel: ReviewViewModel) {
     Column() {
-        Text(text = "Select rating: ", fontSize = 12.sp)
+        Text(text = "Chọn số sao:", fontSize = 12.sp, color = Color(0xFF6D4C41))
         Row() {
             for (i in 1..5) {
                 Icon(

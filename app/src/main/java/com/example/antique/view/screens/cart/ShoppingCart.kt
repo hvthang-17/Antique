@@ -23,6 +23,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import com.example.antique.R
 import com.example.antique.view.components.AdminBottomBar
@@ -40,6 +41,7 @@ fun ShoppingCart(
     )
 
     Scaffold(topBar = { TopBar("Giỏ hàng", { navController.popBackStack() }) },
+        containerColor = Color(0xFFF8EBCB),
         content = { padding ->
             Column(
                 Modifier
@@ -62,12 +64,24 @@ fun ShoppingCart(
                             contentDescription = "Empty cart image",
                             Modifier.size(250.dp)
                         )
-                        Text("Giỏ hàng của bạn đang trống", fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                        Text(
+                            "Giỏ hàng của bạn đang trống",
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0xFF4B1E1E)
+                        )
                         Text(
                             "Bạn chưa thêm sản phẩm nào vào giỏ hàng.",
-                            Modifier.padding(bottom = 10.dp)
+                            Modifier.padding(bottom = 10.dp),
+                            color = Color(0xFF4B1E1E)
                         )
-                        Button(onClick = { navController.navigate(Screen.Home.route) }) {
+                        Button(
+                            onClick = { navController.navigate(Screen.Home.route) },
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color(0xFF6D4C41),
+                                contentColor = Color(0xFFF8EBCB)
+                            )
+                        ) {
                             Text("Xem sản phẩm")
                         }
                     }
@@ -80,31 +94,77 @@ fun ShoppingCart(
                         }
                     }
 
-                    Divider(Modifier.padding(top = 10.dp))
+                    Divider(Modifier.padding(top = 10.dp), color = Color(0xFF4B1E1E))
 
                     Column(
                         Modifier.padding(start = 10.dp, end = 10.dp)
                     ) {
                         val totalPrice = viewModel.totalPrice.value
+                        val couponCode by remember { viewModel.couponCode }
+                        val couponMessage by remember { viewModel.couponMessage }
+
+                        OutlinedTextField(
+                            value = couponCode,
+                            onValueChange = { viewModel.couponCode.value = it },
+                            label = { Text("Nhập mã giảm giá") },
+                            singleLine = true,
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = OutlinedTextFieldDefaults.colors(
+                                focusedBorderColor = Color(0xFF6D4C41),
+                                unfocusedBorderColor = Color(0xFF8D6E63),
+                                cursorColor = Color(0xFF6D4C41)
+                            )
+                        )
+
+                        Button(
+                            onClick = { viewModel.applyCouponCode() },
+                            modifier = Modifier
+                                .align(Alignment.End)
+                                .padding(top = 4.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color(0xFF6D4C41),
+                                contentColor = Color(0xFFF8EBCB)
+                            )
+                        ) {
+                            Text("Áp dụng mã")
+                        }
+
+                        if (couponMessage.isNotBlank()) {
+                            Text(
+                                text = couponMessage,
+                                color = if (couponMessage.contains("thành công")) MaterialTheme.colorScheme.primary
+                                else MaterialTheme.colorScheme.error,
+                                modifier = Modifier.padding(top = 4.dp)
+                            )
+                        }
+
                         Row(
                             Modifier
                                 .fillMaxWidth()
                                 .padding(top = 10.dp),
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            Text("Tổng cộng:", fontSize = 16.sp)
-                            Text("$$totalPrice", fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                            Text("Tổng cộng:", fontSize = 16.sp, color = Color(0xFF4B1E1E))
+                            Text("$$totalPrice", fontWeight = FontWeight.Bold, fontSize = 16.sp, color = Color(0xFF4B1E1E))
                         }
                         Row(
                             Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            Text("Giảm giá:", fontSize = 16.sp)
+                            Text("Giảm giá hội viên:", fontSize = 16.sp, color = Color(0xFF4B1E1E))
                             Text(
-                                "${viewModel.discount}%",
+                                "${viewModel.userDiscount}%",
                                 fontWeight = FontWeight.Bold,
-                                fontSize = 16.sp
+                                fontSize = 16.sp,
+                                color = Color(0xFF4B1E1E)
                             )
+                        }
+                        Row(
+                            Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text("Giảm giá mã giảm giá:", fontSize = 16.sp, color = Color(0xFF4B1E1E))
+                            Text("${viewModel.couponDiscount}%", fontWeight = FontWeight.Bold, fontSize = 16.sp, color = Color(0xFF4B1E1E))
                         }
                         Row(
                             Modifier
@@ -112,19 +172,24 @@ fun ShoppingCart(
                                 .padding(bottom = 10.dp),
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            Text("Tổng thanh toán:", fontSize = 16.sp)
+                            Text("Tổng thanh toán:", fontSize = 16.sp, color = Color(0xFF4B1E1E))
                             Text(
                                 "$${viewModel.grandTotal.value}",
                                 fontWeight = FontWeight.Bold,
-                                fontSize = 16.sp
+                                fontSize = 16.sp,
+                                color = Color(0xFF4B1E1E)
                             )
                         }
 
                         Button(
                             onClick = { navController.navigate(Screen.SelectAddress.route) },
-                            Modifier.fillMaxWidth(),
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color(0xFF6D4C41),
+                                contentColor = Color(0xFFF8EBCB)
+                            )
                         ) {
-                            Text(text = "THANH TOÁN", fontSize = 18.sp)
+                            Text("Thanh toán", fontSize = 18.sp)
                         }
                     }
                 }

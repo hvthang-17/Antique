@@ -36,7 +36,6 @@ class ManageProductVM(val context: Application) : AndroidViewModel(context) {
 
     fun setCurrentProduct(product: Product) {
         currentProduct.value = product
-
         title = product.title
         description = product.description
         price = product.price.toString()

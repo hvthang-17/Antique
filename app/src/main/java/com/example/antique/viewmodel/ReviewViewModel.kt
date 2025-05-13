@@ -65,7 +65,7 @@ class ReviewViewModel(val context: Application) : AndroidViewModel(context) {
     @RequiresApi(Build.VERSION_CODES.O)
     private fun getCurrentDate(): String {
         val current = LocalDateTime.now()
-        val formatter = DateTimeFormatter.ofPattern("dd/MM/yy")
+        val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
         return current.format(formatter)
     }
 

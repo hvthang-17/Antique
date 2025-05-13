@@ -15,6 +15,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -58,7 +59,7 @@ fun ManageAddress(
     }
 
     Scaffold(
-        // Modifier for click action anywhere on the screen - Hide keyboard and reset focus
+        containerColor = Color(0xFFF8EBCB),
         modifier = Modifier.clickable(
             interactionSource = remember { MutableInteractionSource() }, indication = null
         ) {
@@ -83,11 +84,16 @@ fun ManageAddress(
                         if (viewModel.nameError) viewModel.nameError = false
                         viewModel.contactName = it
                     },
-                    label = { Text("Họ và tên người nhận") },
+                    label = { Text("Họ và tên người nhận", color = Color(0xFF6D4C41)) },
                     isError = viewModel.nameError,
                     singleLine = true,
                     modifier = inputFieldModifier,
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = Color(0xFF6D4C41),
+                        unfocusedBorderColor = Color(0xFF6D4C41),
+                        cursorColor = Color(0xFF6D4C41)
+                    )
                 )
 
                 OutlinedTextField(
@@ -96,11 +102,16 @@ fun ManageAddress(
                         viewModel.contactNumber = it
                         viewModel.numberError = false
                     },
-                    label = { Text("Số điện thoại") },
+                    label = { Text("Số điện thoại", color = Color(0xFF6D4C41)) },
                     isError = viewModel.numberError,
                     singleLine = true,
                     modifier = inputFieldModifier,
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone)
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = Color(0xFF6D4C41),
+                        unfocusedBorderColor = Color(0xFF6D4C41),
+                        cursorColor = Color(0xFF6D4C41)
+                    )
                 )
 
                 OutlinedTextField(
@@ -109,10 +120,15 @@ fun ManageAddress(
                         viewModel.street = it
                         viewModel.streetError = false
                     },
-                    label = { Text("Tên đường)") },
+                    label = { Text("Tên đường", color = Color(0xFF6D4C41)) },
                     isError = viewModel.streetError,
                     modifier = inputFieldModifier,
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = Color(0xFF6D4C41),
+                        unfocusedBorderColor = Color(0xFF6D4C41),
+                        cursorColor = Color(0xFF6D4C41)
+                    )
                 )
 
                 OutlinedTextField(
@@ -121,10 +137,15 @@ fun ManageAddress(
                         viewModel.ward = it
                         viewModel.wardError = false
                     },
-                    label = { Text("Phường / Xã") },
+                    label = { Text("Phường / Xã", color = Color(0xFF6D4C41)) },
                     isError = viewModel.wardError,
                     modifier = inputFieldModifier,
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = Color(0xFF6D4C41),
+                        unfocusedBorderColor = Color(0xFF6D4C41),
+                        cursorColor = Color(0xFF6D4C41)
+                    )
                 )
 
                 OutlinedTextField(
@@ -133,10 +154,15 @@ fun ManageAddress(
                         viewModel.district = it
                         viewModel.districtError = false
                     },
-                    label = { Text("Quận / Huyện") },
+                    label = { Text("Quận / Huyện", color = Color(0xFF6D4C41)) },
                     isError = viewModel.districtError,
                     modifier = inputFieldModifier,
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = Color(0xFF6D4C41),
+                        unfocusedBorderColor = Color(0xFF6D4C41),
+                        cursorColor = Color(0xFF6D4C41)
+                    )
                 )
 
                 OutlinedTextField(
@@ -145,10 +171,15 @@ fun ManageAddress(
                         viewModel.city = it
                         viewModel.cityError = false
                     },
-                    label = { Text("Tỉnh / Thành phố") },
+                    label = { Text("Tỉnh / Thành phố", color = Color(0xFF6D4C41)) },
                     isError = viewModel.cityError,
                     modifier = inputFieldModifier,
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = Color(0xFF6D4C41),
+                        unfocusedBorderColor = Color(0xFF6D4C41),
+                        cursorColor = Color(0xFF6D4C41)
+                    )
                 )
 
                 OutlinedTextField(
@@ -157,18 +188,22 @@ fun ManageAddress(
                         viewModel.poBox = it
                         viewModel.poBoxError = false
                     },
-                    label = { Text("Mã bưu điện (nếu có)") },
+                    label = { Text("Mã bưu điện", color = Color(0xFF6D4C41)) },
                     isError = viewModel.poBoxError,
                     modifier = inputFieldModifier,
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = Color(0xFF6D4C41),
+                        unfocusedBorderColor = Color(0xFF6D4C41),
+                        cursorColor = Color(0xFF6D4C41)
+                    )
                 )
 
                 Row(
                     Modifier
                         .fillMaxWidth()
                         .padding(top = 10.dp),
-                    horizontalArrangement = Arrangement.End,
-                    verticalAlignment = Alignment.Top
+                    horizontalArrangement = Arrangement.Center
                 ) {
                     Button(
                         onClick = {
@@ -178,17 +213,22 @@ fun ManageAddress(
                                 if (manageType == "Thêm") viewModel.addAddress()
                                 else if (manageType == "Sửa") viewModel.updateAddress(addressId)
 
-                                if (initScreen == "Select") {
+                                if (initScreen == "Chọn") {
                                     navController.navigate(Screen.SelectAddress.route) {
                                         popUpTo(Screen.SelectAddress.route) { inclusive = true }
                                     }
-                                } else if (initScreen == "Manage") {
+                                } else if (initScreen == "Quản lý") {
                                     navController.navigate(Screen.MyAddresses.route) {
                                         popUpTo(Screen.MyAddresses.route) { inclusive = true }
                                     }
                                 }
                             }
-                        }, shape = RoundedCornerShape(20.dp)
+                        },
+                        shape = RoundedCornerShape(20.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(0xFF6D4C41),
+                            contentColor = Color(0xFFF8EBCB)
+                        )
                     ) {
                         Text(text = manageType)
                     }

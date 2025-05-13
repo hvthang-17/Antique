@@ -19,10 +19,10 @@ class OrderDetailsViewModel(val context: Application) : AndroidViewModel(context
 
     var allOrderFullDetails = mutableListOf<OrderItem>()
 
-    private val placeHolderOrder = Order("", "", "Invalid Product", 0.0, "", "all", emptyList())
+    private val placeHolderOrder = Order("", "", "Sản phẩm không hợp lệ", 0.0, "", OrderStatus.All.code, emptyList())
     private val placeHolderProduct = Product(
         cid = "",
-        title = "Missing product",
+        title = "Không tìm thấy sản phẩm",
         price = 0.0,
         description = "",
         stock = 0,

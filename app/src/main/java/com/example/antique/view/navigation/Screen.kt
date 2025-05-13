@@ -9,6 +9,7 @@ sealed class Screen(
     val title: String = "",
     val icon: ImageVector = Icons.Default.Info
 ) {
+
     object Login : Screen(
         route = "login"
     )
@@ -122,15 +123,30 @@ sealed class Screen(
     object DashboardDetailsPage : Screen(
         route = "detailsPage"
     )
-//
-//    object AdminCategoryList : Screen(
-//        route = "adminCategoryList",
-//        title = "Danh mục",
-//    )
-//
-//    object AdminCouponList : Screen(
-//        route = "adminCouponList",
-//        title = "Mã giảm giá",
-//    )
+
+    object AdminCategoryList : Screen(
+        route = "adminCategoryList/{title}/{type}/{cid}",
+    )
+
+    object ManageCategory : Screen(
+        route = "manageCategory/{actionType}"
+    )
+
+    object CategoryList : Screen(
+        route = "categoryList"
+    )
+
+    object AdminCouponList : Screen(
+        route = "adminCouponList/{title}/{type}/{cid}",
+    )
+
+    object ManageCoupon : Screen(
+        route = "manageCoupon/{actionType}"
+    )
+
+    object CouponList : Screen(
+        route = "couponList"
+    )
+
 }
 

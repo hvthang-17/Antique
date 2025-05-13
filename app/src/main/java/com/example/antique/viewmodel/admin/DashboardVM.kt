@@ -5,19 +5,27 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
+import com.example.antique.model.remote.entity.Category
+import com.example.antique.model.remote.entity.Coupon
 import com.example.antique.model.repository.ProductRepository
 import com.example.antique.model.remote.entity.Order
 import com.example.antique.model.remote.entity.Product
+import com.example.antique.model.repository.CategoryRepository
+import com.example.antique.model.repository.CouponRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 class DashboardVM(val context: Application) : AndroidViewModel(context) {
     private val productRepo = ProductRepository
+    private val categoryRepo = CategoryRepository
+    private val couponRepo = CouponRepository
 
     var selectedSortChip by mutableStateOf(0)
     var allOrders =  mutableListOf<Order>()
     var products  =  mutableListOf<Product>()
+    var categories  =  mutableListOf<Category>()
+    var coupons  =  mutableListOf<Coupon>()
 
     fun getAllProducts(): List<Product> {
         var products = emptyList<Product>()
@@ -27,6 +35,26 @@ class DashboardVM(val context: Application) : AndroidViewModel(context) {
             }
         }
         return products
+    }
+
+    fun getAllCategories(): List<Category> {
+        var categories = emptyList<Category>()
+        runBlocking {
+            this.launch(Dispatchers.IO) {
+                categories = categoryRepo.getAllCategories()
+            }
+        }
+        return categories
+    }
+
+    fun getAllCoupons(): List<Coupon> {
+        var coupons = emptyList<Coupon>()
+        runBlocking {
+            this.launch(Dispatchers.IO) {
+                coupons = couponRepo.getAllCoupons()
+            }
+        }
+        return coupons
     }
 
     fun getTotalSales() : Double{
@@ -41,7 +69,7 @@ class DashboardVM(val context: Application) : AndroidViewModel(context) {
         return total
     }
 
-    fun getLatestOrders(): List<Order> { // List<Order
+    fun getLatestOrders(): List<Order> {
         when (selectedSortChip) {
             1 -> allOrders.sortBy { it.status }
             2 -> allOrders.sortBy { it.date }

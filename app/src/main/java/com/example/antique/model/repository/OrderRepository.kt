@@ -6,6 +6,7 @@ import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestoreSettings
 import com.example.antique.model.remote.entity.Order
 import com.example.antique.model.remote.entity.OrderItem
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
 
 object OrderRepository {
@@ -44,15 +45,32 @@ object OrderRepository {
         )
 
     fun insertOrder(order: Order): String {
-        val documentId = orderCollectionRef.document().id
-        order.id = documentId
-        orderCollectionRef.document(documentId).set(order).addOnSuccessListener {
-            Log.d(TAG, "DocumentSnapshot written with ID: $documentId")
-        }.addOnFailureListener { e ->
-            Log.w(TAG, "Error adding document", e)
+        runBlocking {
+            var documentId: String
+            var isUnique = false
+
+            while (!isUnique) {
+                documentId = "ORD" + (1000..9999).random()
+
+                val existingOrder = orderCollectionRef.document(documentId).get().await()
+                if (!existingOrder.exists()) {
+                    isUnique = true
+                    order.id = documentId
+                    orderCollectionRef.document(documentId).set(order)
+                        .addOnSuccessListener {
+                            Log.d(TAG, "DocumentSnapshot written with ID: $documentId")
+                        }
+                        .addOnFailureListener { e ->
+                            Log.w(TAG, "Error adding document", e)
+                        }
+                    return@runBlocking documentId
+                }
+            }
         }
-        return documentId
+
+        return ""
     }
+
 
     suspend fun getFilteredOrders(status: String): List<Order> {
         return orderCollectionRef.whereEqualTo("status", status)
@@ -66,7 +84,7 @@ object OrderRepository {
             .toObjects(Order::class.java)
 
         for (order in userOrders) {
-            if (order.status == "Delivered") {
+            if (order.status == "Đã giao") {
                 for (item in order.items) {
                     if (item.pid == productId) return true
                 }

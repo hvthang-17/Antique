@@ -44,7 +44,7 @@ fun CategoryFilterComponent(filterVM: FilterViewModel = viewModel(
         )
         TextButton(onClick = {
             filterVM.setCurrentIndex("-1")
-        }) { Text("Reset") }
+        }) { Text("Đặt lại") }
     }
 
     FlowRow(

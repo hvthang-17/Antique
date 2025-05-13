@@ -14,6 +14,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.semantics.Role
@@ -44,8 +45,11 @@ fun AdminReportFilter(
     var error by remember { mutableStateOf(false) }
     val startDate = remember { mutableStateOf("N/A") }
     val endDate = remember { mutableStateOf(currentDateFormatted) }
-    Scaffold(topBar = {
-        TopBar("Filter Report", { navController.popBackStack() }, actions = {
+
+    Scaffold(
+        containerColor = Color(0xFFEAD9B5),
+        topBar = {
+        TopBar("Lọc báo cáo", { navController.popBackStack() }, actions = {
             TextButton(onClick = {
 
                 if (startDate.value != "N/A" && LocalDate.parse(endDate.value, formatter)
@@ -63,7 +67,7 @@ fun AdminReportFilter(
                     navController.popBackStack()
                 }
             }) {
-                Text(text = "Apply")
+                Text(text = "Áp dụng", color = Color.White)
             }
         })
     }, content = { padding ->
@@ -74,15 +78,15 @@ fun AdminReportFilter(
         ) {
             val context = LocalContext.current
             if (error) {
-                Toast.makeText(context, "End date cannot be after Start date.", Toast.LENGTH_SHORT)
+                Toast.makeText(context, "Ngày kết thúc không được sau ngày bắt đầu!", Toast.LENGTH_SHORT)
                     .show()
                 error = false
             }
             val focusManager = LocalFocusManager.current
 
-            Text(text = "Status", fontSize = 22.sp, fontWeight = FontWeight.Bold)
+            Text(text = "Trạng thái", fontSize = 22.sp, fontWeight = FontWeight.Bold, color = Color(0xFF4B1E1E))
             StatusRadioButton()
-            Text(text = "Start Date", fontSize = 22.sp, fontWeight = FontWeight.Bold)
+            Text(text = "Ngày bắt đầu", fontSize = 22.sp, fontWeight = FontWeight.Bold, color = Color(0xFF4B1E1E))
             //Date Picker
             val calendar = Calendar.getInstance()
             calendar.add(Calendar.DAY_OF_MONTH, -1)
@@ -99,12 +103,20 @@ fun AdminReportFilter(
                     dateDialog.show()
                 },
                 onValueChange = {},
-                label = { Text("start date") },
                 singleLine = true,
                 enabled = false,
+                label = { Text("Ngày bắt đầu", color = Color(0xFF4B1E1E)) },
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = Color(0xFF6D4C41),
+                    unfocusedBorderColor = Color(0xFF6D4C41),
+                    disabledTextColor = Color(0xFF4B1E1E),
+                    disabledLabelColor = Color(0xFF4B1E1E),
+                    disabledBorderColor = Color(0xFF6D4C41),
+                    disabledPlaceholderColor = Color(0xFF4B1E1E)
+                )
             )
 
-            Text(text = "End Date", fontSize = 22.sp, fontWeight = FontWeight.Bold)
+            Text(text = "Ngày kết thúc", fontSize = 22.sp, fontWeight = FontWeight.Bold, color = Color(0xFF4B1E1E))
             //Date Picker
             val calendar2 = Calendar.getInstance()
             val dateDialog2 = DatePickerDialog(
@@ -119,9 +131,17 @@ fun AdminReportFilter(
                     dateDialog2.show()
                 },
                 onValueChange = {},
-                label = { Text("end date") },
                 singleLine = true,
                 enabled = false,
+                label = { Text("Ngày kết thúc", color = Color(0xFF4B1E1E)) },
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = Color(0xFF6D4C41),
+                    unfocusedBorderColor = Color(0xFF6D4C41),
+                    disabledTextColor = Color(0xFF4B1E1E),
+                    disabledLabelColor = Color(0xFF4B1E1E),
+                    disabledBorderColor = Color(0xFF6D4C41),
+                    disabledPlaceholderColor = Color(0xFF4B1E1E)
+                )
             )
         }
     })
@@ -151,6 +171,7 @@ fun StatusRadioButton() {
                 )
                 Text(
                     text = text,
+                    color = Color(0xFF4B1E1E),
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier.padding(start = 16.dp)
                 )

@@ -81,17 +81,15 @@ fun ProductListFilter(
     }) {
 
         Scaffold(topBar = {
-            TopBar("Filter $productType", { navController.popBackStack() }) {
+            TopBar("Lọc $productType", { navController.popBackStack() }) {
                 TextButton(onClick = {
-                    if (category_id == "-1" && categoryList.contains(Category(name = productType!!))) {
+                    if (category_id == "-1" && categoryList.any { it.name == productType }) {
                         navRoute = "ProductList/All products/All products/$category_id/1"
                     }
                     navController.navigate(navRoute) {
                         popUpTo("home")
-
                     }
                 }) {
-
                     Text(
                         text = "Áp dụng",
                         Modifier.padding(end = 5.dp),
@@ -123,7 +121,7 @@ fun ProductListFilter(
                         overflow = TextOverflow.Clip,
                     )
                     Text(
-                        text = "Kết quả tìm kiếm",
+                        text = " kết quả tìm kiếm",
                         textAlign = TextAlign.Left,
                         fontWeight = FontWeight.Bold,
                         fontSize = 20.sp,

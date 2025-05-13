@@ -1,24 +1,24 @@
 package com.example.antique.view.components
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Text
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 @ExperimentalMaterial3Api
 @Composable
 fun SuccessDialog(
     openDialog: MutableState<Boolean>,
-    title: String = "Success",
-    description: String = "Action successful",
-    confirmBtnText: String = "Dismiss",
+    title: String = "Thành công",
+    description: String = "Hành động thành công",
+    confirmBtnText: String = "Đóng",
     confirmNavFn: () -> Unit = {}
 ) {
     if (openDialog.value) {
@@ -27,25 +27,52 @@ fun SuccessDialog(
                 openDialog.value = false
                 confirmNavFn()
             },
+            containerColor = Color(0xFFF8EBCB),
+            titleContentColor = Color(0xFF5D3A00),
+            textContentColor = Color(0xFF3F2C1B),
             title = {
-                Text(title)
+                Text(
+                    text = title,
+                    fontSize = 22.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF5D3A00)
+                )
             },
             text = {
-                Column() {
-                    Text(description, Modifier.padding(top = 10.dp))
+                Column(
+                    modifier = Modifier
+                        .padding(top = 8.dp)
+                        .fillMaxWidth()
+                ) {
+                    Text(
+                        text = description,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = Color(0xFF3F2C1B)
+                    )
                 }
             },
             confirmButton = {
-                Button(
-                    modifier = Modifier.fillMaxWidth(),
-                    onClick = {
-                        openDialog.value = false
-                        confirmNavFn()
-                    }
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    contentAlignment = Alignment.Center
                 ) {
-                    Text(confirmBtnText)
+                    Button(
+                        onClick = {
+                            openDialog.value = false
+                            confirmNavFn()
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(0xFF8C6A3F),
+                            contentColor = Color.White
+                        ),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(text = confirmBtnText, fontSize = 16.sp)
+                    }
                 }
-
             }
         )
     }

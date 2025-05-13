@@ -7,14 +7,12 @@ data class Coupon(
     var id: String = "",
     val code: String = "",
     val discountPercent: Int,
-    val minPrice: Double,
-    val expiryDate: Long = 0L
+    val expiryDate: String
 ) {
     constructor() : this(
         id = "",
         code = "",
         discountPercent = 0,
-        minPrice = 0.0,
-        expiryDate = 0L
+        expiryDate = ""
     )
 }

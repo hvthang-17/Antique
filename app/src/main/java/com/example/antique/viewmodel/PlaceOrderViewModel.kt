@@ -12,6 +12,7 @@ import com.example.antique.model.remote.entity.Address
 import com.example.antique.model.remote.entity.Order
 import com.example.antique.model.remote.entity.OrderItem
 import com.example.antique.model.remote.entity.OrderStatus
+import com.example.antique.model.repository.ProductRepository
 import com.example.antique.model.repository.UserRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -37,7 +38,7 @@ class PlaceOrderViewModel(val context: Application) : AndroidViewModel(context) 
             aid = selectedAddress.id,
             date = currentDate,
             total = totalPrice,
-            status = OrderStatus.Processing.name,
+            status = OrderStatus.Processing.code,
             items = mutableListOf<OrderItem>()
         )
 
@@ -50,18 +51,19 @@ class PlaceOrderViewModel(val context: Application) : AndroidViewModel(context) 
                     quantity = it.cart.quantity
                 )
                 orderList.add(orderItem)
+                val newStock = (it.product.stock - it.cart.quantity).coerceAtLeast(0)
+                ProductRepository.updateProductStock(it.product.id, newStock)
             }
 
             order.items = orderList
             orderRepository.insertOrder(order)
             cartRepository.deleteCartByUser(currentUserId)
 
-            // Update user tier (Silver, Gold) based on number of orders
             val userOrderCount = orderRepository.getOrderByUserId(currentUserId).size
             var type = "New"
 
-            if (userOrderCount >= 5) type = "Gold"
-            else if (userOrderCount >= 1) type = "Silver"
+            if (userOrderCount >= 10) type = "Gold"
+            else if (userOrderCount >= 5) type = "Silver"
 
             val user = userRepository.getUserById(currentUserId)
             user?.let {

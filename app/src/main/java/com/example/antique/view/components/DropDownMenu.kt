@@ -16,7 +16,6 @@ fun DropDownMenu(options: List<String>, text: String, type: String, defaultOptio
         onExpandedChange = { expanded = !expanded },
     ) {
         TextField(
-            // The `menuAnchor` modifier must be passed to the text field for correctness.
             modifier = Modifier.menuAnchor(),
             readOnly = true,
             value = selectedOptionText,

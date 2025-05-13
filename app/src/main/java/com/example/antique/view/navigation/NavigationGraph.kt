@@ -17,10 +17,14 @@ import androidx.navigation.navArgument
 import com.example.antique.view.screens.*
 import com.example.antique.view.screens.admin.dashboard.AdminDashboardInit
 import com.example.antique.view.screens.admin.dashboard.DetailsPageInit
+import com.example.antique.view.screens.admin.manageCategories.ManageCategoryInit
+import com.example.antique.view.screens.admin.manageCoupons.ManageCouponInit
 import com.example.antique.view.screens.admin.manageProducts.ManageProductInit
 import com.example.antique.view.screens.admin.report.AdminReportFilter
 import com.example.antique.view.screens.admin.report.AdminReportsInit
 import com.example.antique.view.screens.cart.ShoppingCart
+import com.example.antique.view.screens.category.CategoryList
+import com.example.antique.view.screens.coupon.CouponList
 import com.example.antique.view.screens.home.Home
 import com.example.antique.view.screens.login.Forgot
 import com.example.antique.view.screens.login.Login
@@ -179,14 +183,14 @@ fun NavigationGraph(navController: NavHostController) {
             ProductList(navController, "$title", "", "$type", cid, filterStatus)
         }
         composable(route = Screen.MyAddresses.route) {
-            Address(navController, "Manage")
+            Address(navController, "Quản lý")
         }
 
         composable(route = Screen.Payment.route) {
             SelectPayment(navController)
         }
         composable(route = Screen.SelectAddress.route) {
-            Address(navController, "Select")
+            Address(navController, "Chọn")
         }
 
         composable(
@@ -197,7 +201,7 @@ fun NavigationGraph(navController: NavHostController) {
             val query = it.arguments?.getString("param")
             ProductList(
                 navController,
-                title = "Search result for $query",
+                title = "Kết quả tìm kiếm cho $query",
                 param = "$query",
                 type = "",
                 cid = "", //-1
@@ -228,5 +232,61 @@ fun NavigationGraph(navController: NavHostController) {
                 backStackEntry.arguments?.getString("type"),
             )
         }
+
+        composable(
+            route = Screen.AdminCategoryList.route,
+        ) {
+            CategoryList(navController, "Quản lý danh mục", "Admin", "")
+        }
+
+        composable(
+            route = Screen.ManageCategory.route, arguments = listOf(
+                navArgument("actionType") { type = NavType.StringType },
+            )
+        ) {
+            val actionType = it.arguments?.getString("actionType")
+            ManageCategoryInit(navController = navController, actionType = actionType)
+        }
+        composable(
+            route = "${Screen.CategoryList.route}/{title}/{type}/{cid}",
+            arguments = listOf(
+                navArgument("title") { type = NavType.StringType },
+                navArgument("type") { type = NavType.StringType },
+                navArgument("cid") { type = NavType.StringType },
+            )
+        ) {
+            val title = it.arguments?.getString("title")
+            val type = it.arguments?.getString("type")
+            val cid = it.arguments?.getString("cid")
+            CategoryList(navController, "$title", "$type", "")
+        }
+
+        composable(
+            route = Screen.AdminCouponList.route,
+        ) {
+            CouponList(navController, "Quản lý mã giảm giá", "Admin")
+        }
+
+        composable(
+            route = Screen.ManageCoupon.route, arguments = listOf(
+                navArgument("actionType") { type = NavType.StringType },
+            )
+        ) {
+            val actionType = it.arguments?.getString("actionType")
+            ManageCouponInit(navController = navController, actionType = actionType)
+        }
+        composable(
+            route = "${Screen.CouponList.route}/{title}/{type}",
+            arguments = listOf(
+                navArgument("title") { type = NavType.StringType },
+                navArgument("type") { type = NavType.StringType },
+            )
+        ) {
+            val title = it.arguments?.getString("title")
+            val type = it.arguments?.getString("type")
+            CouponList(navController, "$title", "$type")
+        }
+
     }
 }
+

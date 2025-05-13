@@ -2,11 +2,13 @@ package com.example.antique.view.screens.admin.report
 
 import android.annotation.SuppressLint
 import androidx.activity.ComponentActivity
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -31,35 +33,41 @@ fun AdminReportCard(order: Order, allProducts: List<Product>) {
 
     Card(
         modifier = Modifier
-            .padding(2.dp)
-            .fillMaxWidth(),
+            .padding(6.dp)
+            .fillMaxWidth()
+            .border(width = 2.dp, color = Color(0xFF6D4C41), shape = MaterialTheme.shapes.medium),
         onClick = {},
-        shape = CardDefaults.outlinedShape
+        shape = MaterialTheme.shapes.medium,
+        colors = CardDefaults.cardColors(
+            containerColor = Color(0xFFEAD9B5),
+            contentColor = Color(0xFF4B1E1E)
+        ),
+        elevation = CardDefaults.elevatedCardElevation(6.dp)
     ) {
         Column(Modifier.padding(10.dp)) {
-            Text(text = "Order# ${order.id}", style = largeTitle)
-            Text(text = "Status: ${order.status}", style = mediumTitle)
+            Text(text = "Mã đơn hàng: ${order.id}", style = largeTitle)
+            Text(text = "Trạng thái: ${order.status}", style = mediumTitle)
 
-            Spacer(Modifier.height(5.dp))
+            Spacer(Modifier.height(8.dp))
 
             Row(
                 Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(text = order.date, style = smallTitle)
-                Text(text = "Total: $${order.total}", style = smallTitle)
+                Text(text = "Tổng: $${order.total}", style = smallTitle)
             }
 
-            Divider(color = MaterialTheme.colorScheme.inversePrimary)
-            Spacer(modifier = Modifier.height(5.dp))
+            Divider(color = Color(0xFF6D4C41), thickness = 1.dp)
+            Spacer(modifier = Modifier.height(6.dp))
 
             Row(
                 Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(text = "Product xQuantity", style = smallCaption)
-                Text(text = "Price", style = smallCaption)
+                Text(text = "Sản phẩm x Số lượng", style = smallCaption)
+                Text(text = "Giá", style = smallCaption)
             }
 
             Spacer(modifier = Modifier.height(10.dp))
@@ -80,7 +88,7 @@ fun AdminReportCard(order: Order, allProducts: List<Product>) {
                         Row {
                             Text(text = productTitleShort, style = smallTitle)
                             Spacer(modifier = Modifier.width(4.dp))
-                            Text(text = "x${item.quantity}", style = smallTitle)
+                            Text(text = "x ${item.quantity}", style = smallTitle)
                         }
                         Text(text = "$${product.price}", style = smallTitle)
                     }

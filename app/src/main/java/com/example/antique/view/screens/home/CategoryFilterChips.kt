@@ -18,7 +18,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.antique.model.remote.entity.Category
 import com.example.antique.viewmodel.FilterViewModel
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CategoryFilterChips(

@@ -81,4 +81,6 @@ class ProductViewModel(val context: Application) : AndroidViewModel(context) {
         }
         return userBoughtIt
     }
+
+
 }

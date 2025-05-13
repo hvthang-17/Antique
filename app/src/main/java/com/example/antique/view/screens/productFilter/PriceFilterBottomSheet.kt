@@ -11,6 +11,7 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
@@ -30,87 +31,106 @@ import com.example.antique.viewmodel.FilterViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("ContextCastToActivity")
 @Composable
-fun PriceFilterBottomSheet(filterVM: FilterViewModel = viewModel(LocalContext.current as ComponentActivity)) {
+fun PriceFilterBottomSheet(
+    filterVM: FilterViewModel = viewModel(LocalContext.current as ComponentActivity)
+) {
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
 
     fun validatePriceInput() {
         if (filterVM.startPriceText.isBlank() || filterVM.endPriceText.isBlank()) {
-            Toast.makeText(context, "Dữ liệu không hợp lệ", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Vui lòng nhập đầy đủ giá", Toast.LENGTH_SHORT).show()
         } else {
             if (filterVM.startPriceText.toFloat() >= filterVM.endPriceText.toFloat()) {
                 Toast.makeText(
-                    context, "Giá tối thiểu phải thấp hơn giá tối đa", Toast.LENGTH_SHORT
+                    context, "Giá tối thiểu phải nhỏ hơn giá tối đa", Toast.LENGTH_SHORT
                 ).show()
             } else {
-                filterVM.setPriceRange(
-                    filterVM.startPriceText.toInt().toFloat()..filterVM.endPriceText.toInt()
-                        .toFloat()
-                )
-                filterVM.setPriceEnd(
-                    filterVM.startPriceText.toInt().toFloat()..filterVM.endPriceText.toInt()
-                        .toFloat()
-                )
+                val range = filterVM.startPriceText.toFloat()..filterVM.endPriceText.toFloat()
+                filterVM.setPriceRange(range)
+                filterVM.setPriceEnd(range)
             }
         }
     }
 
-
     Column(
         modifier = Modifier
             .selectableGroup()
-            .padding(10.dp)
+            .padding(16.dp)
     ) {
-
         Divider(
-            modifier = Modifier.fillMaxWidth(), thickness = 2.dp, color = Color.Black
+            modifier = Modifier.fillMaxWidth(),
+            thickness = 2.dp,
+            color = Color(0xFF6D4C41)
         )
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(12.dp))
 
         Text(
-            text = "Nhập giá",
+            text = "Nhập khoảng giá",
             textAlign = TextAlign.Left,
             fontWeight = FontWeight.Bold,
             fontSize = 22.sp,
-            softWrap = true,
-            overflow = TextOverflow.Clip,
+            color = Color(0xFF4B1E1E)
         )
-        Spacer(modifier = Modifier.height(10.dp))
+
+        Spacer(modifier = Modifier.height(12.dp))
+
         Row(
-            horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.size(300.dp)
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier.fillMaxWidth()
         ) {
             TextField(
-                modifier = Modifier.size(120.dp, 100.dp),
+                modifier = Modifier
+                    .width(150.dp)
+                    .height(80.dp),
                 value = filterVM.startPriceText,
                 onValueChange = { filterVM.startPriceText = it },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                keyboardActions = KeyboardActions(onDone = {
-                    focusManager.moveFocus(
-                        FocusDirection.Right
-                    )
-                }),
-                label = { Text(text = "Giá tối thiểu") },
-                textStyle = TextStyle(fontWeight = FontWeight.Bold, fontSize = 30.sp),
-                placeholder = { Text(filterVM.startPriceRange.toString()) },
-
+                keyboardActions = KeyboardActions(
+                    onDone = { focusManager.moveFocus(FocusDirection.Right) }
+                ),
+                label = {
+                    Text("Giá từ", color = Color(0xFF6D4C41))
+                },
+                placeholder = {
+                    Text(filterVM.startPriceRange.toString(), color = Color(0xFFBCAAA4))
+                },
+                textStyle = TextStyle(
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 24.sp,
+                    color = Color(0xFF4B1E1E)
                 )
+            )
+
+            Spacer(modifier = Modifier.width(12.dp))
+
             TextField(
-                modifier = Modifier.size(120.dp, 100.dp),
+                modifier = Modifier
+                    .width(150.dp)
+                    .height(80.dp),
                 value = filterVM.endPriceText,
                 onValueChange = { filterVM.endPriceText = it },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                keyboardActions = KeyboardActions(onDone = {
-                    focusManager.clearFocus()
-                    validatePriceInput()
-                    // handleLogin()
-                }),
-                label = { Text(text = "Giá tối đa") },
-                placeholder = { Text(filterVM.endPriceRange.toString()) },
-                textStyle = TextStyle(fontWeight = FontWeight.Bold, fontSize = 30.sp)
+                keyboardActions = KeyboardActions(
+                    onDone = {
+                        focusManager.clearFocus()
+                        validatePriceInput()
+                    }
+                ),
+                label = {
+                    Text("Đến", color = Color(0xFF6D4C41))
+                },
+                placeholder = {
+                    Text(filterVM.endPriceRange.toString(), color = Color(0xFFBCAAA4))
+                },
+                textStyle = TextStyle(
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 24.sp,
+                    color = Color(0xFF4B1E1E)
+                )
             )
         }
     }
-
 }

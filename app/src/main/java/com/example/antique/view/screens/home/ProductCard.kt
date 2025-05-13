@@ -28,13 +28,16 @@ fun ProductCard(rating: Double, product: Product, navToProduct: () -> Unit) {
             .height(250.dp)
             .requiredWidthIn(100.dp, 150.dp),
         onClick = { navToProduct() },
-        //colors = CardDefaults.cardColors(Color.Gray)
+        colors = CardDefaults.cardColors(
+            containerColor = Color.White,
+            contentColor = Color(0xFF4B1E1E)
+        ),
+        elevation = CardDefaults.cardElevation(6.dp)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                //.background(Color.White)
-                .padding(5.dp),
+                .padding(8.dp),
             verticalArrangement = Arrangement.SpaceAround,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -44,8 +47,8 @@ fun ProductCard(rating: Double, product: Product, navToProduct: () -> Unit) {
                 contentScale = ContentScale.Fit,
                 modifier = Modifier
                     .background(Color.White)
-                    .height(150.dp)
-                    .width(150.dp)
+                    .height(140.dp)
+                    .width(140.dp)
             )
 
             Spacer(modifier = Modifier.height(5.dp))
@@ -58,8 +61,6 @@ fun ProductCard(rating: Double, product: Product, navToProduct: () -> Unit) {
                 ) {
                     Text(
                         "$${product.price}",
-//                        fontSize = 18.sp,
-//                        fontWeight = FontWeight.Bold,
                         style = mediumTitle,
                         maxLines = 2,
                         overflow = TextOverflow.Clip
@@ -79,7 +80,7 @@ fun ProductCard(rating: Double, product: Product, navToProduct: () -> Unit) {
                     }
                 }
 
-                Spacer(modifier = Modifier.height(5.dp))
+                Spacer(modifier = Modifier.height(4.dp))
 
                 Text(
                     product.title, style = mediumCaption, maxLines = 2, overflow = TextOverflow.Clip
