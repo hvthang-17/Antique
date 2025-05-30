@@ -27,12 +27,16 @@ import com.example.antique.R
 import com.example.antique.view.components.TopBar
 import com.example.antique.view.navigation.Screen
 import com.example.antique.viewmodel.ForgotViewModel
+import android.os.Handler
+import android.os.Looper
 
-@ExperimentalComposeUiApi
-@OptIn(ExperimentalMaterial3Api::class)
+
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun Forgot(
-    navController: NavHostController, viewModel: ForgotViewModel, onVerifyClick: () -> Unit
+    navController: NavHostController,
+    viewModel: ForgotViewModel,
+    onVerifyClick: () -> Unit
 ) {
     val context = LocalContext.current
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -40,97 +44,113 @@ fun Forgot(
 
     Scaffold(
         modifier = Modifier.clickable(
-            interactionSource = remember { MutableInteractionSource() }, indication = null
+            interactionSource = remember { MutableInteractionSource() },
+            indication = null
         ) {
             keyboardController?.hide()
             focusManager.clearFocus()
-        }, topBar = { TopBar(navBack = { navController.popBackStack() }) }, content = { padding ->
-            Column(
-                Modifier
-                    .padding(padding)
-                    .fillMaxSize()
-                    .background(Color(0xFFD9C789))
-                    .padding(20.dp)
+        },
+        topBar = { TopBar(navBack = { navController.popBackStack() }) }
+    ) { padding ->
+
+        val brownText = Color(0xFF4B1E1E)
+
+        Column(
+            Modifier
+                .padding(padding)
+                .fillMaxSize()
+                .background(Color(0xFFD9C789))
+                .padding(20.dp)
+        ) {
+
+            Text(
+                text = "Quên mật khẩu",
+                fontWeight = FontWeight.Bold,
+                fontSize = 40.sp,
+                color = brownText
+            )
+
+            Text(
+                text = "Vui lòng nhập địa chỉ email. Mã xác thực sẽ được gửi đến bạn.",
+                color = brownText
+            )
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 30.dp)
+                    .clip(RoundedCornerShape(16.dp))
             ) {
-                val brownText = Color(0xFF4B1E1E)
-                Text(
-                    text = "Quên mật khẩu",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 40.sp,
-                    color = brownText
+                Image(
+                    painter = painterResource(id = R.drawable.forgot),
+                    contentDescription = "",
+                    modifier = Modifier
+                        .height(180.dp)
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(16.dp)),
+                    contentScale = ContentScale.Crop
                 )
-                Text(
-                    text = "Vui lòng nhập địa chỉ email. Mã xác thực sẽ được gửi đến bạn.",
-                    color = brownText
-                )
+            }
 
-                Spacer(modifier = Modifier.height(10.dp))
+            Text(
+                text = "Địa chỉ email",
+                fontWeight = FontWeight.SemiBold,
+                color = brownText
+            )
 
-                Box(
+            OutlinedTextField(
+                value = viewModel.email,
+                onValueChange = { viewModel.email = it },
+                label = { Text("Email", color = brownText) },
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Button(
+                    onClick = {
+                        viewModel.validateEmailInput { isValid ->
+                            if (isValid) {
+                                viewModel.generateVCode()
+
+                                viewModel.sendVerificationEmail(
+                                    onSuccess = {
+                                        // Gọi lại trên Main Thread
+                                        Handler(Looper.getMainLooper()).post {
+                                            Toast.makeText(context, "Mã xác thực đã được gửi đến email!", Toast.LENGTH_SHORT).show()
+                                            navController.navigate(Screen.VerifyPassword.route)
+                                        }
+                                    },
+                                    onFailure = { e ->
+                                        Handler(Looper.getMainLooper()).post {
+                                            Toast.makeText(context, "Lỗi khi gửi email: ${e.message}", Toast.LENGTH_LONG).show()
+                                        }
+                                    }
+                                )
+
+                            } else {
+                                Toast.makeText(context, "Email không tồn tại trong hệ thống!", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    }
+                    ,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(bottom = 30.dp)
-                        .clip(RoundedCornerShape(16.dp))
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.forgot),
-                        contentDescription = "",
-                        modifier = Modifier
-                            .height(180.dp)
-                            .fillMaxWidth()
-                            .clip(RoundedCornerShape(16.dp)),
-                        contentScale = ContentScale.Crop
+                        .height(50.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFF8C6A3F),
+                        contentColor = Color.White
                     )
-                }
-
-                Text(
-                    text = "Địa chỉ email",
-                    fontWeight = FontWeight.SemiBold,
-                    color = brownText
-                )
-
-                OutlinedTextField(
-                    value = viewModel.email,
-                    onValueChange = { viewModel.email = it },
-                    label = { Text("Email", color = brownText) },
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                fun sendVerificationCode() {
-                    if (viewModel.validateEmailInput()) {
-                        viewModel.generateVCode()
-                        navController.navigate(Screen.VerifyPassword.route)
-                    } else {
-                        Toast.makeText(context, "Thông tin không hợp lệ!", Toast.LENGTH_SHORT).show()
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(32.dp))
-
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Button(
-                        onClick = {
-                            sendVerificationCode()
-                        }, modifier = Modifier
-                            .fillMaxWidth()
-                            .height(50.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFF8C6A3F),
-                            contentColor = Color.White
-                        )
-                    ) {
-                        Text("Gửi mã xác thực", fontSize = 16.sp)
-                    }
+                    Text("Gửi mã xác thực", fontSize = 16.sp)
                 }
             }
-        })
+        }
+    }
 }
-
-
-
-
-
-

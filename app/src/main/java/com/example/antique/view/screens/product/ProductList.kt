@@ -117,7 +117,7 @@ fun ProductList(
                     modifier = Modifier.fillMaxSize()
                 ) {
                     Text("Không tìm thấy!", fontSize = 20.sp, fontWeight = FontWeight.Bold)
-                    Button(onClick = { navController.navigate(navRoute) }) { //go home.
+                    Button(onClick = { navController.navigate(navRoute) }) {
                         Text("Thử lại")
                     }
                 }

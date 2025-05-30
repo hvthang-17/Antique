@@ -1,6 +1,5 @@
 package com.example.antique.view.screens.login
 
-import android.annotation.SuppressLint
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -29,14 +28,12 @@ import com.example.antique.view.components.TopBar
 import com.example.antique.view.navigation.Screen
 import com.example.antique.viewmodel.ForgotViewModel
 
-@SuppressLint("UnrememberedMutableState")
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun VerifyPassword(
     navController: NavHostController,
     viewModel: ForgotViewModel
 ) {
-
     val context = LocalContext.current
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
@@ -45,11 +42,9 @@ fun VerifyPassword(
         modifier = Modifier.clickable(
             interactionSource = remember { MutableInteractionSource() },
             indication = null
-        )
-        {
+        ) {
             keyboardController?.hide()
             focusManager.clearFocus()
-
         },
         topBar = { TopBar(navBack = { navController.popBackStack() }) }
     ) { padding ->
@@ -86,7 +81,7 @@ fun VerifyPassword(
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.verify),
-                    contentDescription = "",
+                    contentDescription = null,
                     modifier = Modifier
                         .height(180.dp)
                         .fillMaxWidth()
@@ -95,23 +90,22 @@ fun VerifyPassword(
                 )
             }
 
-            Text(
-                text = "Mã xác thực của hệ thống:",
-                fontWeight = FontWeight.SemiBold,
-                color = brownText
-            )
-
-            Text(
-                text = viewModel.getVCode().toString(),
-                color = brownText,
-                fontSize = 20.sp
-            )
-
-            Spacer(modifier = Modifier.height(20.dp))
+            // ❗ Chỉ hiển thị mã khi đang DEBUG
+            /*
+            if (BuildConfig.DEBUG) {
+                Text(
+                    text = "Mã xác thực hệ thống: ${viewModel.getVCode()}",
+                    color = brownText,
+                    fontSize = 20.sp
+                )
+                Spacer(modifier = Modifier.height(10.dp))
+            }
+            */
 
             Text(
                 text = "Nhập mã xác thực",
-                color = brownText
+                color = brownText,
+                fontWeight = FontWeight.SemiBold
             )
 
             OutlinedTextField(
@@ -121,15 +115,25 @@ fun VerifyPassword(
                 modifier = Modifier.fillMaxWidth()
             )
 
+            Spacer(modifier = Modifier.height(20.dp))
+
             fun submitVCode() {
+                keyboardController?.hide()
+                focusManager.clearFocus()
+
+                if (viewModel.vCode.isBlank()) {
+                    Toast.makeText(context, "Vui lòng nhập mã xác thực!", Toast.LENGTH_SHORT).show()
+                    return
+                }
+
                 if (viewModel.verify()) {
+                    Toast.makeText(context, "Xác thực thành công!", Toast.LENGTH_SHORT).show()
                     navController.navigate(Screen.ResetPassword.route)
                 } else {
-                    Toast
-                        .makeText(context, "Mã xác thực không đúng!", Toast.LENGTH_SHORT)
-                        .show()
+                    Toast.makeText(context, "Mã xác thực không đúng!", Toast.LENGTH_SHORT).show()
                 }
             }
+
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -137,9 +141,7 @@ fun VerifyPassword(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Button(
-                    onClick = {
-                        submitVCode()
-                    },
+                    onClick = { submitVCode() },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(50.dp),
@@ -148,13 +150,9 @@ fun VerifyPassword(
                         contentColor = Color.White
                     )
                 ) {
-                    Text(
-                        text = "Xác nhận",
-                    )
+                    Text("Xác nhận")
                 }
             }
-
         }
     }
-
 }

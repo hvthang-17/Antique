@@ -16,6 +16,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.antique.view.screens.*
 import com.example.antique.view.screens.admin.dashboard.AdminDashboardInit
+import com.example.antique.view.screens.admin.dashboard.AdminSalesChartScreen
 import com.example.antique.view.screens.admin.dashboard.DetailsPageInit
 import com.example.antique.view.screens.admin.manageCategories.ManageCategoryInit
 import com.example.antique.view.screens.admin.manageCoupons.ManageCouponInit
@@ -146,6 +147,10 @@ fun NavigationGraph(navController: NavHostController) {
             route = Screen.Dashboard.route,
         ) {
             AdminDashboardInit(navController)
+        }
+
+        composable(route = Screen.AdminSalesChart.route) {
+            AdminSalesChartScreen(navController)
         }
 
         composable(

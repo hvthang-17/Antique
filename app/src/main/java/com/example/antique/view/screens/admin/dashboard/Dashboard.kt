@@ -116,8 +116,8 @@ fun Dashboard(
                     StatsCard(Icons.Filled.Discount, "Mã giảm giá", "${coupons.size}") {
                         navController.navigate(Screen.AdminCouponList.route)
                     }
-                    StatsCard(Icons.Filled.Discount, "Biểu đồ", "${coupons.size}") {
-                        navController.navigate(Screen.AdminCouponList.route)
+                    StatsCard(Icons.Filled.BarChart, "Doanh thu", "") {
+                        navController.navigate(Screen.AdminSalesChart.route)
                     }
                 }
 

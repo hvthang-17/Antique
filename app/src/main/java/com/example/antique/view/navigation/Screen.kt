@@ -117,7 +117,7 @@ sealed class Screen(
 
     object ProductListFilter : Screen(
         route = "FilterProducts",
-        title = "Filter Products"
+        title = "Lọc sản phẩm"
     )
 
     object DashboardDetailsPage : Screen(
@@ -147,6 +147,8 @@ sealed class Screen(
     object CouponList : Screen(
         route = "couponList"
     )
+
+    object AdminSalesChart : Screen("detailsPage/salesChart/Doanh thu")
 
 }
 

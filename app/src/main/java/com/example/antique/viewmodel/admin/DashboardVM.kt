@@ -78,4 +78,27 @@ class DashboardVM(val context: Application) : AndroidViewModel(context) {
         }
         return allOrders
     }
+
+    fun getMonthlySales(): List<Double> {
+        val monthlySales = MutableList(12) { 0.0 }
+
+        for (order in allOrders) {
+            try {
+                val parts = order.date.split("/")
+                if (parts.size >= 2) {
+                    val month = parts[0].toIntOrNull() ?: continue
+                    val index = month - 1
+                    if (index in 0..11) {
+                        monthlySales[index] += order.total
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+
+        return monthlySales
+    }
+
+
 }

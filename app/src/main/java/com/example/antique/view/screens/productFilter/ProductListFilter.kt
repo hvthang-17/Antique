@@ -46,9 +46,9 @@ fun ProductListFilterInit(
     ProductListFilter(navController, category_id, productType, categoryList, false)
 }
 
+@SuppressLint("ContextCastToActivity")
 @Composable
 @OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
-@SuppressLint("ContextCastToActivity")
 fun ProductListFilter(
     navController: NavHostController,
     category_id: String? ,
@@ -88,8 +88,10 @@ fun ProductListFilter(
                     }
                     navController.navigate(navRoute) {
                         popUpTo("home")
+
                     }
                 }) {
+
                     Text(
                         text = "Áp dụng",
                         Modifier.padding(end = 5.dp),
@@ -130,9 +132,10 @@ fun ProductListFilter(
                     )
                 }
 
-                //CategoryFilterComponent(categoryList = categoryList)
+                CategoryFilterComponent(categoryList = categoryList)
                 PriceFilterComponent(scope = scope, state = state)
                 ReviewFilterComponent()
+
             }
         }, bottomBar = {
             if (appViewModel.isAdmin) AdminBottomBar(navController = navController)

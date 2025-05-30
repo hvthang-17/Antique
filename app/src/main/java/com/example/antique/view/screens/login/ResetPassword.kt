@@ -28,6 +28,8 @@ import com.example.antique.R
 import com.example.antique.view.components.TopBar
 import com.example.antique.view.navigation.Screen
 import com.example.antique.viewmodel.ForgotViewModel
+import android.os.Handler
+import android.os.Looper
 
 @SuppressLint("UnrememberedMutableState")
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
@@ -118,19 +120,18 @@ fun ResetPassword(
                 modifier = Modifier.fillMaxWidth()
             )
             fun resetPassword() {
-                if(viewModel.passwordMatch()){
-                    if(viewModel.resetPassword())
-                        navController.navigate(Screen.Login.route)
-                    else
-                        Toast
-                            .makeText(context,  "Có lỗi xảy ra", Toast.LENGTH_SHORT)
-                            .show()
-                }else{
-                    Toast
-                        .makeText(context, "Mật khẩu không khớp!", Toast.LENGTH_SHORT)
-                        .show()
+                viewModel.resetPassword { success ->
+                    Handler(Looper.getMainLooper()).post {
+                        if (success) {
+                            Toast.makeText(context, "Đổi mật khẩu thành công!", Toast.LENGTH_SHORT).show()
+                            navController.navigate(Screen.Login.route)
+                        } else {
+                            Toast.makeText(context, "Thất bại! Vui lòng thử lại.", Toast.LENGTH_SHORT).show()
+                        }
+                    }
                 }
             }
+
 
             Column(
                 modifier = Modifier

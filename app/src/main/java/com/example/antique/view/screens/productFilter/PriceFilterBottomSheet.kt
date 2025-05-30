@@ -11,7 +11,6 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
@@ -29,11 +28,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.antique.viewmodel.FilterViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
-@SuppressLint("ContextCastToActivity")
 @Composable
-fun PriceFilterBottomSheet(
-    filterVM: FilterViewModel = viewModel(LocalContext.current as ComponentActivity)
-) {
+fun PriceFilterBottomSheet(@SuppressLint("ContextCastToActivity") filterVM: FilterViewModel = viewModel(LocalContext.current as ComponentActivity)) {
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
 
@@ -46,91 +42,74 @@ fun PriceFilterBottomSheet(
                     context, "Giá tối thiểu phải nhỏ hơn giá tối đa", Toast.LENGTH_SHORT
                 ).show()
             } else {
-                val range = filterVM.startPriceText.toFloat()..filterVM.endPriceText.toFloat()
-                filterVM.setPriceRange(range)
-                filterVM.setPriceEnd(range)
+                filterVM.setPriceRange(
+                    filterVM.startPriceText.toInt().toFloat()..filterVM.endPriceText.toInt()
+                        .toFloat()
+                )
+                filterVM.setPriceEnd(
+                    filterVM.startPriceText.toInt().toFloat()..filterVM.endPriceText.toInt()
+                        .toFloat()
+                )
             }
         }
     }
 
+
     Column(
         modifier = Modifier
             .selectableGroup()
-            .padding(16.dp)
+            .padding(10.dp)
     ) {
+
         Divider(
-            modifier = Modifier.fillMaxWidth(),
-            thickness = 2.dp,
-            color = Color(0xFF6D4C41)
+            modifier = Modifier.fillMaxWidth(), thickness = 2.dp, color = Color.Black
         )
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(10.dp))
 
         Text(
             text = "Nhập khoảng giá",
             textAlign = TextAlign.Left,
             fontWeight = FontWeight.Bold,
             fontSize = 22.sp,
-            color = Color(0xFF4B1E1E)
+            softWrap = true,
+            overflow = TextOverflow.Clip,
         )
-
-        Spacer(modifier = Modifier.height(12.dp))
-
+        Spacer(modifier = Modifier.height(10.dp))
         Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier.fillMaxWidth()
+            horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.size(300.dp)
         ) {
             TextField(
-                modifier = Modifier
-                    .width(150.dp)
-                    .height(80.dp),
+                modifier = Modifier.size(120.dp, 100.dp),
                 value = filterVM.startPriceText,
                 onValueChange = { filterVM.startPriceText = it },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                keyboardActions = KeyboardActions(
-                    onDone = { focusManager.moveFocus(FocusDirection.Right) }
-                ),
-                label = {
-                    Text("Giá từ", color = Color(0xFF6D4C41))
-                },
-                placeholder = {
-                    Text(filterVM.startPriceRange.toString(), color = Color(0xFFBCAAA4))
-                },
-                textStyle = TextStyle(
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 24.sp,
-                    color = Color(0xFF4B1E1E)
+                keyboardActions = KeyboardActions(onDone = {
+                    focusManager.moveFocus(
+                        FocusDirection.Right
+                    )
+                }),
+                label = { Text(text = "Giá từ") },
+                textStyle = TextStyle(fontWeight = FontWeight.Bold, fontSize = 30.sp),
+                placeholder = { Text(filterVM.startPriceRange.toString()) },
+
                 )
-            )
-
-            Spacer(modifier = Modifier.width(12.dp))
-
             TextField(
-                modifier = Modifier
-                    .width(150.dp)
-                    .height(80.dp),
+                modifier = Modifier.size(120.dp, 100.dp),
                 value = filterVM.endPriceText,
                 onValueChange = { filterVM.endPriceText = it },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                keyboardActions = KeyboardActions(
-                    onDone = {
-                        focusManager.clearFocus()
-                        validatePriceInput()
-                    }
-                ),
-                label = {
-                    Text("Đến", color = Color(0xFF6D4C41))
-                },
-                placeholder = {
-                    Text(filterVM.endPriceRange.toString(), color = Color(0xFFBCAAA4))
-                },
-                textStyle = TextStyle(
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 24.sp,
-                    color = Color(0xFF4B1E1E)
-                )
+                keyboardActions = KeyboardActions(onDone = {
+                    focusManager.clearFocus()
+                    validatePriceInput()
+                    // handleLogin()
+                }),
+                label = { Text(text = "Đến") },
+                placeholder = { Text(filterVM.endPriceRange.toString()) },
+                textStyle = TextStyle(fontWeight = FontWeight.Bold, fontSize = 30.sp)
             )
         }
     }
+
 }

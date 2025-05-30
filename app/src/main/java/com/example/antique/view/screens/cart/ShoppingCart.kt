@@ -1,7 +1,9 @@
 package com.example.antique.view.screens.cart
 
 import android.annotation.SuppressLint
+import android.os.Build
 import androidx.activity.ComponentActivity
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -28,6 +30,7 @@ import androidx.compose.ui.res.painterResource
 import com.example.antique.R
 import com.example.antique.view.components.AdminBottomBar
 
+@RequiresApi(Build.VERSION_CODES.O)
 @SuppressLint("ContextCastToActivity")
 @ExperimentalMaterial3Api
 @Composable

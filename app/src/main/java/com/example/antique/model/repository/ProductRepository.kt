@@ -131,7 +131,7 @@ object ProductRepository {
             val totalStars = product.reviews.sumOf { it.stars }
             val avgStars = if (product.reviews.isNotEmpty()) totalStars / product.reviews.size.toFloat() else 0f
 
-            if (avgStars >= 3f) {
+            if (avgStars >= 4f) {
                 matchingProducts.add(product)
             }
         }
@@ -167,11 +167,14 @@ object ProductRepository {
     suspend fun getNormalFilterQuery(
         startPrice: Float, endPrice: Float
     ): List<Product>? {
-        return productCollectionRef.whereGreaterThan("price", startPrice)
-            .whereLessThan("price", endPrice).get().await().toObjects(
-                Product::class.java
-            )
+        return productCollectionRef
+            .whereGreaterThan("price", startPrice)
+            .whereLessThan("price", endPrice)
+            .get()
+            .await()
+            .toObjects(Product::class.java)
     }
+
 
     suspend fun updateProductStock(productId: String, newStock: Int) {
         try {

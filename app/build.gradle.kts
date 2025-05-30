@@ -1,9 +1,17 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     id("com.google.gms.google-services")
     kotlin("plugin.serialization") version "1.9.0"
+}
+
+val props = Properties()
+val localPropsFile = rootProject.file("local.properties")
+if (localPropsFile.exists()) {
+    localPropsFile.inputStream().use { props.load(it) }
 }
 
 android {
@@ -17,6 +25,9 @@ android {
         versionCode = 1
         versionName = "1.0"
 
+        buildConfigField("String", "EMAIL_USERNAME", "\"${props["EMAIL_USERNAME"]}\"")
+        buildConfigField("String", "EMAIL_PASSWORD", "\"${props["EMAIL_PASSWORD"]}\"")
+
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -29,6 +40,17 @@ android {
             )
         }
     }
+
+    packaging {
+        resources {
+            excludes += setOf(
+                "/META-INF/LICENSE.md",
+                "/META-INF/LICENSE-notice.md",
+                "/META-INF/NOTICE.md"
+            )
+        }
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
@@ -38,6 +60,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
@@ -80,21 +103,20 @@ dependencies {
     implementation ("com.squareup.retrofit2:retrofit:2.9.0")
     //GsonConverterFactory
     implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
-
+    // Coil Compose
     implementation("io.coil-kt:coil-compose:2.2.2")
+    // Accompanist FlowLayout
     implementation ("com.google.accompanist:accompanist-flowlayout:0.30.1")
+    // Material
     implementation ("androidx.compose.material:material:1.5.4")
-
+    // Cloudinary
     implementation("com.cloudinary:cloudinary-android:2.0.0")
-
-    implementation ("androidx.compose.ui:ui:<compose_version>")
-    implementation ("androidx.compose.foundation:foundation:<compose_version>")
-
-//    implementation ("androidx.compose.material:material:1.6.8")
-//    implementation ("androidx.compose.material3:material3:1.2.1")
-//    implementation ("androidx.activity:activity-compose:1.9.2")
-//    implementation ("com.google.firebase:firebase-auth:22.3.1")
-//    implementation ("com.google.firebase:firebase-firestore:24.10.3")
-
+    // Jetpack Compose UI core
+    implementation("androidx.compose.ui:ui:1.5.4")
+    // Jetpack Compose Foundation
+    implementation("androidx.compose.foundation:foundation:1.5.4")
+    // JavaMail API
+    implementation ("com.sun.mail:android-mail:1.6.7")
+    implementation ("com.sun.mail:android-activation:1.6.7")
 
 }

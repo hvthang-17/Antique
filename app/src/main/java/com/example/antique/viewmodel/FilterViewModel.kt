@@ -17,7 +17,8 @@ import kotlin.math.roundToInt
 
 class FilterViewModel(val context: Application) : AndroidViewModel(context) {
     private val productRepository = ProductRepository
-    private var filteredProductList = emptyList<Product>()!!
+    var filteredProducts by mutableStateOf<List<Product>>(emptyList())
+        private set
 
     var startPriceRange by mutableStateOf(0f)
     var endPriceRange by mutableStateOf(5000f)
@@ -31,7 +32,7 @@ class FilterViewModel(val context: Application) : AndroidViewModel(context) {
     var reviewSlider by mutableStateOf(5f)
     var steps by mutableStateOf(0)
     var reviewRange by mutableStateOf(0f..5f)
-
+    var isRatingFilterEnabled by mutableStateOf(false)
     fun setCurrentIndex(index: String) {
         currentCid.value = index
     }
@@ -43,18 +44,16 @@ class FilterViewModel(val context: Application) : AndroidViewModel(context) {
 
     fun setPriceEnd(range: ClosedFloatingPointRange<Float>) {
         onFinishedPriceRange = range
-        setStartPrice(range.toRange().lower)
-        setEndPrice(range.toRange().upper)
+        setPriceRange(range)
     }
 
     fun setPriceRange(range: ClosedFloatingPointRange<Float>) {
         priceSliderRange = range
-
+        startPriceRange = range.start
+        endPriceRange = range.endInclusive
     }
 
-    fun getPriceRange(): ClosedFloatingPointRange<Float> {
-        return priceSliderRange
-    }
+    fun getPriceRange(): ClosedFloatingPointRange<Float> = priceSliderRange
 
     fun setStartPrice(value: Float) {
         startPriceRange = value
@@ -163,12 +162,14 @@ class FilterViewModel(val context: Application) : AndroidViewModel(context) {
         runBlocking {
             this.launch(Dispatchers.IO) {
                 products = productRepository.getNormalFilterQuery(
-                    getStartPrice(), getEndPrice()
+                    startPriceRange, endPriceRange
                 )
             }
         }
 
-        return if (products?.isEmpty() == false) getMatchingProductsByRating(products!!) else emptyList()
+        return if (!products.isNullOrEmpty()) {
+            if (isRatingFilterEnabled) getMatchingProductsByRating(products!!) else products
+        } else emptyList()
     }
 
     fun getTrendingProducts(

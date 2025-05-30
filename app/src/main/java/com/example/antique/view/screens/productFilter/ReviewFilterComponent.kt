@@ -43,39 +43,27 @@ fun ReviewFilterComponent(
             fontWeight = FontWeight.Bold,
             fontSize = 20.sp,
             softWrap = true,
-            color = Color(0xFF4B1E1E),
             overflow = TextOverflow.Clip,
         )
-        TextButton(
-            onClick = {
-                filterVM.setReviewSliderValue(5f)
-                filterVM.sliderEnd = 5f
-            },
-            colors = ButtonDefaults.textButtonColors(contentColor = Color(0xFF4B1E1E))
-        ) {
-            Text("Đặt lại")
-        }
+        TextButton(onClick = {
+            filterVM.setReviewSliderValue(5f)
+            filterVM.sliderEnd = 5f
+        }) { Text("Đặt lại") }
     }
 
     ReviewSlider(filterVM.steps, filterVM.reviewRange)
 }
 
-@SuppressLint("ContextCastToActivity")
+
 @Composable
 fun ReviewSlider(
     steps: Int = 0,
     valueRange: ClosedFloatingPointRange<Float>,
-    filterViewModel: FilterViewModel = viewModel(
+    @SuppressLint("ContextCastToActivity") filterViewModel: FilterViewModel = viewModel(
         LocalContext.current as ComponentActivity
     )
 ) {
-    Text(
-        text = "${filterViewModel.getReviewSliderValue().roundToInt()} sao trở lên",
-        fontSize = 16.sp,
-        color = Color(0xFF4B1E1E),
-        fontWeight = FontWeight.Medium
-    )
-
+    Text(text = "${filterViewModel.getReviewSliderValue().roundToInt()} sao trở lên")
     Slider(modifier = Modifier.semantics { contentDescription = "Minimum stars slider" },
         value = filterViewModel.getReviewSliderValue(),
         onValueChange = { filterViewModel.setReviewSliderValue(it) },
@@ -83,11 +71,5 @@ fun ReviewSlider(
         steps = steps,
         onValueChangeFinished = {
             filterViewModel.sliderEnd = filterViewModel.reviewSlider
-        },
-        colors = SliderDefaults.colors(
-            thumbColor = Color(0xFF6D4C41),
-            activeTrackColor = Color(0xFF4B1E1E),
-            inactiveTrackColor = Color(0xFFBCAAA4)
-        )
-    )
+        })
 }

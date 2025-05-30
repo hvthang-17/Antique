@@ -44,7 +44,6 @@ fun PriceFilterComponent(filterVM: FilterViewModel = viewModel(
             fontWeight = FontWeight.Bold,
             fontSize = 20.sp,
             softWrap = true,
-            color = Color(0xFF4B1E1E),
             overflow = TextOverflow.Clip,
         )
         Row() {
@@ -62,14 +61,14 @@ fun PriceFilterComponent(filterVM: FilterViewModel = viewModel(
                 )
                 Text("Điều chỉnh")
             }
-            TextButton(
-                onClick = {
-                    filterVM.setPriceRange(0f..5000f)
-                    filterVM.setPriceEnd(0f..5000f)
-                },
-                colors = ButtonDefaults.textButtonColors(contentColor = Color(0xFF6D4C41))
-            ) {
-                Text("Đặt lại")
+            TextButton(onClick = {
+                filterVM.setPriceRange(0f..5000f)
+                filterVM.setPriceEnd(0f..5000f)
+            }) {
+                Text(
+                    text = "Đặt lại",
+                    textAlign = TextAlign.Left,
+                )
             }
         }
 
@@ -80,10 +79,9 @@ fun PriceFilterComponent(filterVM: FilterViewModel = viewModel(
 
 
 @OptIn(ExperimentalMaterial3Api::class)
-@SuppressLint("ContextCastToActivity")
 @Composable
 fun PriceRangeSlider(
-    filterViewModel: FilterViewModel = viewModel(
+    @SuppressLint("ContextCastToActivity") filterViewModel: FilterViewModel = viewModel(
         LocalContext.current as ComponentActivity
     )
 ) {
@@ -92,20 +90,18 @@ fun PriceRangeSlider(
         Row(
             Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Row {
-                Text("Từ: ", color = Color(0xFF4B1E1E))
+            Row() {
+                Text("Từ: ")
                 Text(
                     "$${filterViewModel.getPriceRange().toRange().lower.toInt()}",
-                    fontWeight = FontWeight.Bold,
-                    color = Color(0xFF4B1E1E)
+                    fontWeight = FontWeight.Bold
                 )
             }
-            Row {
-                Text("Đến: ", color = Color(0xFF4B1E1E))
+            Row() {
+                Text("Đến: ")
                 Text(
                     "$${filterViewModel.getPriceRange().toRange().upper.toInt()}",
-                    fontWeight = FontWeight.Bold,
-                    color = Color(0xFF4B1E1E)
+                    fontWeight = FontWeight.Bold
                 )
             }
         }
@@ -113,19 +109,14 @@ fun PriceRangeSlider(
         RangeSlider(
             modifier = Modifier.semantics { contentDescription = "Localized Description" },
             value = filterViewModel.getPriceRange(),
-            onValueChange = { filterViewModel.setPriceRange(it) }, 
+            onValueChange = { filterViewModel.setPriceRange(it) }, //colors = Color.Black
             steps = 50,
             valueRange = 0f..5000f,
             onValueChangeFinished = {
                 // launch some business logic update with the state you hold
                 // viewModel.updateSelectedSliderValue(sliderPosition)
                 filterViewModel.setPriceEnd(filterViewModel.getPriceRange())
-            },
-            colors = SliderDefaults.colors(
-                thumbColor = Color(0xFF6D4C41),
-                activeTrackColor = Color(0xFF4B1E1E),
-                inactiveTrackColor = Color(0xFFBCAAA4)
-            )
+            }
         )
     }
 }

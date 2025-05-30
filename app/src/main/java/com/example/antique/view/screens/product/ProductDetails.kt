@@ -72,7 +72,7 @@ fun ProductDetails(
             if (reviewCount != 0) {
                 Row(Modifier.padding(bottom = 10.dp)) {
                     Text("⭐$avgRating", fontWeight = FontWeight.Bold, color = Color(0xFF6D4C41))
-                    Text(" ($reviewCount ${if (reviewCount == 1) "Đánh giá" else "Các đánh giá"})")
+                    Text(" ($reviewCount ${if (reviewCount == 1) "đánh giá" else "các đánh giá"})")
                 }
             }
 
@@ -140,7 +140,14 @@ fun ProductDetails(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("$${product.value.price}", fontWeight = FontWeight.Bold, fontSize = 25.sp,  color = Color(0xFF8B5E3C))
+                Text("$${product.value.price}", fontWeight = FontWeight.Bold, fontSize = 25.sp,  color = Color(0xFF8B5E3C)
+                )
+                Text(
+                    "Số lượng: ${product.value.stock}",
+                    fontSize = 14.sp,
+                    color = Color(0xFF4B1E1E),
+                    fontWeight = FontWeight.Medium
+                )
 
                 if (product.value.stock > 0) {
                     Button(

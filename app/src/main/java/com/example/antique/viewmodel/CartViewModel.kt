@@ -1,6 +1,8 @@
 package com.example.antique.viewmodel
 
 import android.app.Application
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
@@ -12,6 +14,9 @@ import com.example.antique.model.repository.CouponRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
 
 class CartViewModel(val context: Application) : AndroidViewModel(context) {
     private val cartRepository = CartRepository
@@ -46,6 +51,8 @@ class CartViewModel(val context: Application) : AndroidViewModel(context) {
         }
     }
 
+
+    @RequiresApi(Build.VERSION_CODES.O)
     fun applyCouponCode() {
         viewModelScope.launch(Dispatchers.IO) {
             val code = couponCode.value.trim()
@@ -53,8 +60,23 @@ class CartViewModel(val context: Application) : AndroidViewModel(context) {
             val matchedCoupon = coupons.find { it.code.equals(code, ignoreCase = true) }
 
             if (matchedCoupon != null) {
-                couponDiscount = matchedCoupon.discountPercent.toDouble()
-                couponMessage.value = "Áp dụng mã thành công!"
+                try {
+                    val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+                    val expiryDate = LocalDate.parse(matchedCoupon.expiryDate, formatter)
+                    val today = LocalDate.now()
+
+                    if (!expiryDate.isBefore(today)) {
+                        couponDiscount = matchedCoupon.discountPercent.toDouble()
+                        couponMessage.value = "Áp dụng mã thành công!"
+                    } else {
+                        couponDiscount = 0.0
+                        couponMessage.value = "Mã giảm giá đã hết hạn!"
+                    }
+
+                } catch (e: DateTimeParseException) {
+                    couponDiscount = 0.0
+                    couponMessage.value = "Định dạng ngày không hợp lệ!"
+                }
             } else {
                 couponDiscount = 0.0
                 couponMessage.value = "Mã không hợp lệ!"
